@@ -43,7 +43,6 @@ module Bundleup
       def connection
         @connection ||= Faraday.new(url: BASE_URL) do |conn|
           conn.request :retry, max: 3, interval: 0.5, backoff_factor: 2
-          conn.response :raise_error
           conn.adapter Faraday.default_adapter
         end
       end
