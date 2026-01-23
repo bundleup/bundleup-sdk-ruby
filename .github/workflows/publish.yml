@@ -1,0 +1,46 @@
+name: Publish Gem
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Update version.rb
+        run: |
+          VERSION=${{ steps.get_version.outputs.version }}
+          sed -i "s/VERSION = '.*'/VERSION = '$VERSION'/" lib/bundleup/version.rb
+          cat lib/bundleup/version.rb
+
+      - name: Update CHANGELOG.md
+        run: |
+          VERSION=${{ steps.get_version.outputs.version }}
+          DATE=$(date +%Y-%m-%d)
+
+          # Check if version already exists in changelog
+          if ! grep -q "## \[$VERSION\]" CHANGELOG.md; then
+            # Add new version entry after the first "## [" line
+            sed -i "/^## \[/i ## [$VERSION] - $DATE\n\n###
