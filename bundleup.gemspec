@@ -17,7 +17,8 @@ Gem::Specification.new do |spec|
   spec.metadata = {
     'homepage_uri' => spec.homepage,
     'source_code_uri' => 'https://github.com/bundleup/bundleup-sdk-ruby',
-    'changelog_uri' => 'https://github.com/bundleup/bundleup-sdk-ruby/blob/main/CHANGELOG.md'
+    'changelog_uri' => 'https://github.com/bundleup/bundleup-sdk-ruby/blob/main/CHANGELOG.md',
+    'rubygems_mfa_required' => 'true'
   }
 
   spec.files         = Dir['lib/**/*', 'LICENSE', 'README.md', 'CHANGELOG.md']

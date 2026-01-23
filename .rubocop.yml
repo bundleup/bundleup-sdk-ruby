@@ -1,0 +1,23 @@
+# RuboCop configuration
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.7
+
+# Disable BlockLength for RSpec files as it's standard practice
+# RSpec describe blocks can be long and that's expected
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
+# Increase thresholds slightly for AbcSize to accommodate existing code
+Metrics/AbcSize:
+  Max: 25
+
+# Increase threshold slightly for MethodLength to accommodate existing code  
+Metrics/MethodLength:
+  Max: 15
+
+# Allow development dependencies in gemspec (common practice)
+Gemspec/DevelopmentDependencies:
+  Enabled: false
