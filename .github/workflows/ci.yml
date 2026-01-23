@@ -32,7 +32,7 @@ jobs:
 
       - name: Check gem can be required
         run: |
-          ruby -e "require './lib/bundleup'; puts '✓ Gem requires successfully'"
+          bundle exec ruby -e "require './lib/bundleup'; puts '✓ Gem requires successfully'"
 
   lint:
     runs-on: ubuntu-latest
