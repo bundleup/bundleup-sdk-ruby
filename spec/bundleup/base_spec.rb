@@ -24,8 +24,8 @@ RSpec.describe Bundleup::Base do
   describe '#list' do
     it 'makes a GET request to the resource path' do
       stub = stub_request(:get, 'https://api.bundleup.io/v1/test_resources')
-        .with(headers: { 'Authorization' => 'Bearer test_api_key' })
-        .to_return(status: 200, body: '{"data": []}', headers: { 'Content-Type' => 'application/json' })
+             .with(headers: { 'Authorization' => 'Bearer test_api_key' })
+             .to_return(status: 200, body: '{"data": []}', headers: { 'Content-Type' => 'application/json' })
 
       instance.list
 
@@ -36,11 +36,11 @@ RSpec.describe Bundleup::Base do
   describe '#create' do
     it 'makes a POST request with data' do
       stub = stub_request(:post, 'https://api.bundleup.io/v1/test_resources')
-        .with(
-          headers: { 'Authorization' => 'Bearer test_api_key', 'Content-Type' => 'application/json' },
-          body: '{"name":"Test"}'
-        )
-        .to_return(status: 201, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: { 'Authorization' => 'Bearer test_api_key', 'Content-Type' => 'application/json' },
+               body: '{"name":"Test"}'
+             )
+             .to_return(status: 201, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
 
       instance.create(name: 'Test')
 
@@ -51,8 +51,8 @@ RSpec.describe Bundleup::Base do
   describe '#retrieve' do
     it 'makes a GET request with the resource ID' do
       stub = stub_request(:get, 'https://api.bundleup.io/v1/test_resources/123')
-        .with(headers: { 'Authorization' => 'Bearer test_api_key' })
-        .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+             .with(headers: { 'Authorization' => 'Bearer test_api_key' })
+             .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
 
       instance.retrieve('123')
 
@@ -63,11 +63,11 @@ RSpec.describe Bundleup::Base do
   describe '#update' do
     it 'makes a PATCH request with data' do
       stub = stub_request(:patch, 'https://api.bundleup.io/v1/test_resources/123')
-        .with(
-          headers: { 'Authorization' => 'Bearer test_api_key', 'Content-Type' => 'application/json' },
-          body: '{"name":"Updated"}'
-        )
-        .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: { 'Authorization' => 'Bearer test_api_key', 'Content-Type' => 'application/json' },
+               body: '{"name":"Updated"}'
+             )
+             .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
 
       instance.update('123', name: 'Updated')
 
@@ -78,8 +78,8 @@ RSpec.describe Bundleup::Base do
   describe '#delete' do
     it 'makes a DELETE request' do
       stub = stub_request(:delete, 'https://api.bundleup.io/v1/test_resources/123')
-        .with(headers: { 'Authorization' => 'Bearer test_api_key' })
-        .to_return(status: 204, body: '', headers: {})
+             .with(headers: { 'Authorization' => 'Bearer test_api_key' })
+             .to_return(status: 204, body: '', headers: {})
 
       instance.delete('123')
 

@@ -15,11 +15,11 @@ RSpec.describe Bundleup::Proxy do
   describe '#get' do
     it 'makes a GET request with proper headers' do
       stub = stub_request(:get, 'https://proxy.bundleup.io/api/users')
-        .with(headers: {
-                'Authorization' => 'Bearer test_api_key',
-                'BU-Connection-Id' => 'conn_123'
-              })
-        .to_return(status: 200, body: '{"users":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(headers: {
+                     'Authorization' => 'Bearer test_api_key',
+                     'BU-Connection-Id' => 'conn_123'
+                   })
+             .to_return(status: 200, body: '{"users":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.get('/api/users')
 
@@ -30,15 +30,15 @@ RSpec.describe Bundleup::Proxy do
   describe '#post' do
     it 'makes a POST request with body' do
       stub = stub_request(:post, 'https://proxy.bundleup.io/api/users')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'Content-Type' => 'application/json'
-          },
-          body: '{"name":"Test"}'
-        )
-        .to_return(status: 201, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'Content-Type' => 'application/json'
+               },
+               body: '{"name":"Test"}'
+             )
+             .to_return(status: 201, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
 
       instance.post('/api/users', name: 'Test')
 
@@ -49,15 +49,15 @@ RSpec.describe Bundleup::Proxy do
   describe '#put' do
     it 'makes a PUT request' do
       stub = stub_request(:put, 'https://proxy.bundleup.io/api/users/123')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'Content-Type' => 'application/json'
-          },
-          body: '{"name":"Updated"}'
-        )
-        .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'Content-Type' => 'application/json'
+               },
+               body: '{"name":"Updated"}'
+             )
+             .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
 
       instance.put('/api/users/123', name: 'Updated')
 
@@ -68,15 +68,15 @@ RSpec.describe Bundleup::Proxy do
   describe '#patch' do
     it 'makes a PATCH request' do
       stub = stub_request(:patch, 'https://proxy.bundleup.io/api/users/123')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'Content-Type' => 'application/json'
-          },
-          body: '{"email":"test@example.com"}'
-        )
-        .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'Content-Type' => 'application/json'
+               },
+               body: '{"email":"test@example.com"}'
+             )
+             .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
 
       instance.patch('/api/users/123', email: 'test@example.com')
 
@@ -87,11 +87,11 @@ RSpec.describe Bundleup::Proxy do
   describe '#delete' do
     it 'makes a DELETE request' do
       stub = stub_request(:delete, 'https://proxy.bundleup.io/api/users/123')
-        .with(headers: {
-                'Authorization' => 'Bearer test_api_key',
-                'BU-Connection-Id' => 'conn_123'
-              })
-        .to_return(status: 204, body: '', headers: {})
+             .with(headers: {
+                     'Authorization' => 'Bearer test_api_key',
+                     'BU-Connection-Id' => 'conn_123'
+                   })
+             .to_return(status: 204, body: '', headers: {})
 
       instance.delete('/api/users/123')
 

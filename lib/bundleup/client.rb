@@ -11,7 +11,7 @@ module Bundleup
     # @raise [ArgumentError] if api_key is nil or empty
     def initialize(api_key)
       raise ArgumentError, 'API key is required to initialize BundleUp SDK.' if api_key.nil? || api_key.to_s.empty?
-      
+
       @api_key = api_key
     end
 
@@ -42,8 +42,11 @@ module Bundleup
     # @return [Bundleup::Proxy] Proxy instance
     # @raise [ArgumentError] if connection_id is nil or empty
     def proxy(connection_id)
-      raise ArgumentError, 'Connection ID is required to create a Proxy instance.' if connection_id.nil? || connection_id.to_s.empty?
-      
+      if connection_id.nil? || connection_id.to_s.empty?
+        raise ArgumentError,
+              'Connection ID is required to create a Proxy instance.'
+      end
+
       Bundleup::Proxy.new(@api_key, connection_id)
     end
 
@@ -53,8 +56,11 @@ module Bundleup
     # @return [Hash] Hash with :chat, :git, and :pm Unify instances
     # @raise [ArgumentError] if connection_id is nil or empty
     def unify(connection_id)
-      raise ArgumentError, 'Connection ID is required to create a Unify instance.' if connection_id.nil? || connection_id.to_s.empty?
-      
+      if connection_id.nil? || connection_id.to_s.empty?
+        raise ArgumentError,
+              'Connection ID is required to create a Unify instance.'
+      end
+
       {
         chat: Bundleup::Unify::Chat.new(@api_key, connection_id),
         git: Bundleup::Unify::Git.new(@api_key, connection_id),

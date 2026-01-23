@@ -64,8 +64,6 @@ module Bundleup
     end
 
     def request(method, path, body = nil)
-      url = "#{BASE_URL}#{path}"
-      
       response = connection.public_send(method) do |req|
         req.url path
         req.headers['Content-Type'] = 'application/json'
