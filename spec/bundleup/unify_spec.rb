@@ -8,14 +8,14 @@ RSpec.describe Bundleup::Unify::Chat do
   describe '#channels' do
     it 'makes a GET request to channels endpoint' do
       stub = stub_request(:get, 'https://unify.bundleup.io/v1/chat/channels')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'BU-Include-Raw' => 'false'
-          }
-        )
-        .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'BU-Include-Raw' => 'false'
+               }
+             )
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.channels
 
@@ -24,14 +24,14 @@ RSpec.describe Bundleup::Unify::Chat do
 
     it 'supports include_raw parameter' do
       stub = stub_request(:get, 'https://unify.bundleup.io/v1/chat/channels')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'BU-Include-Raw' => 'true'
-          }
-        )
-        .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'BU-Include-Raw' => 'true'
+               }
+             )
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.channels(include_raw: true)
 
@@ -46,14 +46,14 @@ RSpec.describe Bundleup::Unify::Git do
   describe '#repos' do
     it 'makes a GET request to repos endpoint' do
       stub = stub_request(:get, 'https://unify.bundleup.io/v1/git/repos')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'BU-Include-Raw' => 'false'
-          }
-        )
-        .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'BU-Include-Raw' => 'false'
+               }
+             )
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.repos
 
@@ -64,14 +64,14 @@ RSpec.describe Bundleup::Unify::Git do
   describe '#pulls' do
     it 'makes a GET request with repo_name' do
       stub = stub_request(:get, 'https://unify.bundleup.io/v1/git/pulls?repo_name=owner/repo')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'BU-Include-Raw' => 'false'
-          }
-        )
-        .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'BU-Include-Raw' => 'false'
+               }
+             )
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.pulls('owner/repo')
 
@@ -82,14 +82,14 @@ RSpec.describe Bundleup::Unify::Git do
   describe '#tags' do
     it 'makes a GET request with repo_name' do
       stub = stub_request(:get, 'https://unify.bundleup.io/v1/git/tags?repo_name=owner/repo')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'BU-Include-Raw' => 'false'
-          }
-        )
-        .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'BU-Include-Raw' => 'false'
+               }
+             )
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.tags('owner/repo')
 
@@ -100,14 +100,14 @@ RSpec.describe Bundleup::Unify::Git do
   describe '#releases' do
     it 'makes a GET request with repo_name' do
       stub = stub_request(:get, 'https://unify.bundleup.io/v1/git/releases?repo_name=owner/repo')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'BU-Include-Raw' => 'false'
-          }
-        )
-        .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'BU-Include-Raw' => 'false'
+               }
+             )
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.releases('owner/repo')
 
@@ -122,14 +122,14 @@ RSpec.describe Bundleup::Unify::PM do
   describe '#issues' do
     it 'makes a GET request to issues endpoint' do
       stub = stub_request(:get, 'https://unify.bundleup.io/v1/pm/issues')
-        .with(
-          headers: {
-            'Authorization' => 'Bearer test_api_key',
-            'BU-Connection-Id' => 'conn_123',
-            'BU-Include-Raw' => 'false'
-          }
-        )
-        .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'BU-Include-Raw' => 'false'
+               }
+             )
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
 
       instance.issues
 

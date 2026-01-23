@@ -10,11 +10,15 @@ RSpec.describe Bundleup::Client do
     end
 
     it 'raises an error when API key is nil' do
-      expect { described_class.new(nil) }.to raise_error(ArgumentError, 'API key is required to initialize BundleUp SDK.')
+      expect do
+        described_class.new(nil)
+      end.to raise_error(ArgumentError, 'API key is required to initialize BundleUp SDK.')
     end
 
     it 'raises an error when API key is empty' do
-      expect { described_class.new('') }.to raise_error(ArgumentError, 'API key is required to initialize BundleUp SDK.')
+      expect do
+        described_class.new('')
+      end.to raise_error(ArgumentError, 'API key is required to initialize BundleUp SDK.')
     end
   end
 
@@ -64,7 +68,9 @@ RSpec.describe Bundleup::Client do
     end
 
     it 'raises an error when connection_id is nil' do
-      expect { client.proxy(nil) }.to raise_error(ArgumentError, 'Connection ID is required to create a Proxy instance.')
+      expect do
+        client.proxy(nil)
+      end.to raise_error(ArgumentError, 'Connection ID is required to create a Proxy instance.')
     end
 
     it 'raises an error when connection_id is empty' do
@@ -88,7 +94,9 @@ RSpec.describe Bundleup::Client do
     end
 
     it 'raises an error when connection_id is nil' do
-      expect { client.unify(nil) }.to raise_error(ArgumentError, 'Connection ID is required to create a Unify instance.')
+      expect do
+        client.unify(nil)
+      end.to raise_error(ArgumentError, 'Connection ID is required to create a Unify instance.')
     end
 
     it 'raises an error when connection_id is empty' do

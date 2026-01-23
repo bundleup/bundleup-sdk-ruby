@@ -69,7 +69,7 @@ module Bundleup
         req.headers['Content-Type'] = 'application/json'
         req.headers['Authorization'] = "Bearer #{api_key}"
         req.headers['BU-Connection-Id'] = connection_id
-        
+
         if body && %i[post patch put].include?(method)
           req.body = body.to_json
         elsif body && method == :get
