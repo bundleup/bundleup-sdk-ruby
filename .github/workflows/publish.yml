@@ -66,7 +66,7 @@ jobs:
 
       - name: Build gem
         run: |
-          gem build bundleup.gemspec
+          gem build bundleup-sdk.gemspec
 
       - name: Publish to RubyGems
         run: |
