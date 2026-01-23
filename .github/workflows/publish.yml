@@ -43,4 +43,4 @@ jobs:
           # Check if version already exists in changelog
           if ! grep -q "## \[$VERSION\]" CHANGELOG.md; then
             # Add new version entry after the first "## [" line
-            sed -i "/^## \[/i ## [$VERSION] - $DATE\n\n###
+            sed -i "/^## \[/i ## [$VERSION] - $DATE\\n\\n###" <your-file>
