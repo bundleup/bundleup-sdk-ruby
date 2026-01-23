@@ -45,3 +45,43 @@ jobs:
             # Add new version entry after the first "## [" line
             sed -i "0,/^## \[/s//## [$VERSION] - $DATE\n###\n\n&/" CHANGELOG.md
           fi
+
+      - name: Commit version changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add lib/bundleup/version.rb CHANGELOG.md
+          git diff --staged --quiet || git commit -m "Update version to ${{ steps.get_version.outputs.version }}"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          tags: false
+
+      - name: Install dependencies
+        run: |
+          bundle install
+
+      - name: Build gem
+        run: |
+          gem build bundleup.gemspec
+
+      - name: Publish to RubyGems
+        run: |
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          gem push *.gem
+        env:
+          GEM_HOST_API_KEY: "${{ secrets.RUBYGEMS_AUTH_TOKEN }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "*.gem"
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
