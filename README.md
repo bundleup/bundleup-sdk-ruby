@@ -41,12 +41,6 @@ client = Bundleup::Client.new(ENV['BUNDLEUP_API_KEY'])
 # List all connections
 connections = client.connections.list
 puts connections
-
-# Create a new connection
-new_connection = client.connections.create({
-  name: 'My Connection',
-  integration_id: 'integration_123'
-})
 ```
 
 ## Authentication
@@ -78,17 +72,6 @@ connections = client.connections.list(limit: 10, page: 1)
 
 # Retrieve a specific connection
 connection = client.connections.retrieve('conn_123')
-
-# Create a new connection
-connection = client.connections.create({
-  name: 'GitHub Connection',
-  integration_id: 'int_github'
-})
-
-# Update a connection
-updated = client.connections.update('conn_123', {
-  name: 'Updated GitHub Connection'
-})
 
 # Delete a connection
 client.connections.delete('conn_123')
