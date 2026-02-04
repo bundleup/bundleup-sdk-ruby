@@ -1,6 +1,6 @@
 # BundleUp Ruby SDK
 
-[![Gem Version](https://badge.fury.io/rb/bundleup.svg)](https://badge.fury.io/rb/bundleup)
+[![Gem Version](https://badge.fury.io/rb/bundleup-sdk.svg)](https://badge.fury.io/rb/bundleup-sdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official Ruby client library for the [BundleUp](https://bundleup.io) API. Connect to 100+ integrations with a single, unified API.
