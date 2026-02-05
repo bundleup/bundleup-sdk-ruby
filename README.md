@@ -10,7 +10,7 @@ Official Ruby client library for the [BundleUp](https://bundleup.io) API. Connec
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'bundleup'
+gem 'bundleup-sdk'
 ```
 
 And then execute:
@@ -22,7 +22,7 @@ bundle install
 Or install it yourself as:
 
 ```bash
-gem install bundleup
+gem install bundleup-sdk
 ```
 
 ## Requirements
@@ -33,7 +33,7 @@ gem install bundleup
 ## Quick Start
 
 ```ruby
-require 'bundleup'
+require 'bundleup-sdk'
 
 # Initialize the client with your API key
 client = Bundleup::Client.new(ENV['BUNDLEUP_API_KEY'])
