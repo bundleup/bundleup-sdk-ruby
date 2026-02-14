@@ -18,62 +18,64 @@ module Bundleup
 
     # Make a GET request
     #
-    # @param path [String] The request path
-    # @param params [Hash] Query parameters
+    # @param path [String] The request path (can include query parameters)
+    # @param headers [Hash] Additional headers
     # @return [Hash] Response data
-    def get(path, params = {})
-      request(:get, path, params)
+    def get(path, headers: {})
+      request(:get, path, nil, headers)
     end
 
     # Make a POST request
     #
     # @param path [String] The request path
     # @param body [Hash] Request body
+    # @param headers [Hash] Additional headers
     # @return [Hash] Response data
-    def post(path, body = {})
-      request(:post, path, body)
+    def post(path, body = {}, headers: {})
+      request(:post, path, body, headers)
     end
 
     # Make a PUT request
     #
     # @param path [String] The request path
     # @param body [Hash] Request body
+    # @param headers [Hash] Additional headers
     # @return [Hash] Response data
-    def put(path, body = {})
-      request(:put, path, body)
+    def put(path, body = {}, headers: {})
+      request(:put, path, body, headers)
     end
 
     # Make a PATCH request
     #
     # @param path [String] The request path
     # @param body [Hash] Request body
+    # @param headers [Hash] Additional headers
     # @return [Hash] Response data
-    def patch(path, body = {})
-      request(:patch, path, body)
+    def patch(path, body = {}, headers: {})
+      request(:patch, path, body, headers)
     end
 
     # Make a DELETE request
     #
-    # @param path [String] The request path
-    # @param params [Hash] Query parameters
+    # @param path [String] The request path (can include query parameters)
+    # @param headers [Hash] Additional headers
     # @return [Hash] Response data
-    def delete(path, params = {})
-      request(:delete, path, params)
+    def delete(path, headers: {})
+      request(:delete, path, nil, headers)
     end
 
     private
 
-    def request(method, path, body = nil)
+    def request(method, path, body = nil, headers = {})
       response = connection.public_send(method) do |req|
         req.url path
         req.headers['Content-Type'] = 'application/json'
         req.headers['Authorization'] = "Bearer #{api_key}"
         req.headers['BU-Connection-Id'] = connection_id
+        headers.each { |key, value| req.headers[key] = value }
 
         if body && %i[post patch put].include?(method)
           req.body = body.to_json
-        elsif body && method == :get
-          req.params.update(body)
         end
       end
 

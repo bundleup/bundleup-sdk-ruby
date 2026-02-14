@@ -25,6 +25,33 @@ RSpec.describe Bundleup::Proxy do
 
       expect(stub).to have_been_requested
     end
+
+    it 'accepts query parameters in the path' do
+      stub = stub_request(:get, 'https://proxy.bundleup.io/api/users?page=2&limit=10')
+             .with(headers: {
+                     'Authorization' => 'Bearer test_api_key',
+                     'BU-Connection-Id' => 'conn_123'
+                   })
+             .to_return(status: 200, body: '{"users":[]}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.get('/api/users?page=2&limit=10')
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'makes a GET request with custom headers' do
+      stub = stub_request(:get, 'https://proxy.bundleup.io/api/users')
+             .with(headers: {
+                     'Authorization' => 'Bearer test_api_key',
+                     'BU-Connection-Id' => 'conn_123',
+                     'X-Custom-Header' => 'custom-value'
+                   })
+             .to_return(status: 200, body: '{"users":[]}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.get('/api/users', headers: { 'X-Custom-Header' => 'custom-value' })
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#post' do
@@ -41,6 +68,24 @@ RSpec.describe Bundleup::Proxy do
              .to_return(status: 201, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
 
       instance.post('/api/users', name: 'Test')
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'makes a POST request with custom headers' do
+      stub = stub_request(:post, 'https://proxy.bundleup.io/api/users')
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'Content-Type' => 'application/json',
+                 'X-Custom-Header' => 'custom-value'
+               },
+               body: '{"name":"Test"}'
+             )
+             .to_return(status: 201, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.post('/api/users', { name: 'Test' }, headers: { 'X-Custom-Header' => 'custom-value' })
 
       expect(stub).to have_been_requested
     end
@@ -63,6 +108,24 @@ RSpec.describe Bundleup::Proxy do
 
       expect(stub).to have_been_requested
     end
+
+    it 'makes a PUT request with custom headers' do
+      stub = stub_request(:put, 'https://proxy.bundleup.io/api/users/123')
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'Content-Type' => 'application/json',
+                 'X-Custom-Header' => 'custom-value'
+               },
+               body: '{"name":"Updated"}'
+             )
+             .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.put('/api/users/123', { name: 'Updated' }, headers: { 'X-Custom-Header' => 'custom-value' })
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#patch' do
@@ -82,6 +145,24 @@ RSpec.describe Bundleup::Proxy do
 
       expect(stub).to have_been_requested
     end
+
+    it 'makes a PATCH request with custom headers' do
+      stub = stub_request(:patch, 'https://proxy.bundleup.io/api/users/123')
+             .with(
+               headers: {
+                 'Authorization' => 'Bearer test_api_key',
+                 'BU-Connection-Id' => 'conn_123',
+                 'Content-Type' => 'application/json',
+                 'X-Custom-Header' => 'custom-value'
+               },
+               body: '{"email":"test@example.com"}'
+             )
+             .to_return(status: 200, body: '{"id":"123"}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.patch('/api/users/123', { email: 'test@example.com' }, headers: { 'X-Custom-Header' => 'custom-value' })
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#delete' do
@@ -94,6 +175,33 @@ RSpec.describe Bundleup::Proxy do
              .to_return(status: 204, body: '', headers: {})
 
       instance.delete('/api/users/123')
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'accepts query parameters in the path' do
+      stub = stub_request(:delete, 'https://proxy.bundleup.io/api/users/123?force=true')
+             .with(headers: {
+                     'Authorization' => 'Bearer test_api_key',
+                     'BU-Connection-Id' => 'conn_123'
+                   })
+             .to_return(status: 204, body: '', headers: {})
+
+      instance.delete('/api/users/123?force=true')
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'makes a DELETE request with custom headers' do
+      stub = stub_request(:delete, 'https://proxy.bundleup.io/api/users/123')
+             .with(headers: {
+                     'Authorization' => 'Bearer test_api_key',
+                     'BU-Connection-Id' => 'conn_123',
+                     'X-Custom-Header' => 'custom-value'
+                   })
+             .to_return(status: 204, body: '', headers: {})
+
+      instance.delete('/api/users/123', headers: { 'X-Custom-Header' => 'custom-value' })
 
       expect(stub).to have_been_requested
     end
