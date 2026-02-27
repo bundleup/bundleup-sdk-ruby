@@ -2,60 +2,56 @@
 
 module Bundleup
   module Unify
-    # Git resource for unified git operations
+    # Client for Git Unify endpoints.
     class Git < Base
-      # List repositories
-      #
-      # @param params [Hash] Query parameters
-      # @option params [Integer] :limit Number of results to return
-      # @option params [String] :cursor Pagination cursor
-      # @option params [Boolean] :include_raw Include raw response from the integration
-      # @return [Hash] Repositories data with pagination info
+      # Fetches repositories from the connected Git provider.
       def repos(params = {})
-        include_raw = params.delete(:include_raw) || false
-        request(:get, "/#{API_VERSION}/git/repos", params, include_raw: include_raw)
+        response = connection.get('git/repos') do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch git/repos: #{response.status}" unless response.success?
+
+        response.body
       end
 
-      # List pull requests
-      #
-      # @param repo_name [String] Repository name
-      # @param params [Hash] Query parameters
-      # @option params [Integer] :limit Number of results to return
-      # @option params [String] :cursor Pagination cursor
-      # @option params [Boolean] :include_raw Include raw response from the integration
-      # @return [Hash] Pull requests data with pagination info
+      # Fetches pull requests for a specific repository from the connected Git provider.
       def pulls(repo_name, params = {})
-        include_raw = params.delete(:include_raw) || false
-        params[:repo_name] = repo_name
-        request(:get, "/#{API_VERSION}/git/pulls", params, include_raw: include_raw)
+        encoded_repo_name = URI.encode_www_form_component(repo_name)
+
+        response = connection.get("git/repos/#{encoded_repo_name}/pulls") do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch git/repos/#{encoded_repo_name}/pulls: #{response.status}" unless response.success?
+
+        response.body
       end
 
-      # List tags
-      #
-      # @param repo_name [String] Repository name
-      # @param params [Hash] Query parameters
-      # @option params [Integer] :limit Number of results to return
-      # @option params [String] :cursor Pagination cursor
-      # @option params [Boolean] :include_raw Include raw response from the integration
-      # @return [Hash] Tags data with pagination info
+      # Fetches tags for a specific repository from the connected Git provider.
       def tags(repo_name, params = {})
-        include_raw = params.delete(:include_raw) || false
-        params[:repo_name] = repo_name
-        request(:get, "/#{API_VERSION}/git/tags", params, include_raw: include_raw)
+        encoded_repo_name = URI.encode_www_form_component(repo_name)
+
+        response = connection.get("git/repos/#{encoded_repo_name}/tags") do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch git/repos/#{encoded_repo_name}/tags: #{response.status}" unless response.success?
+
+        response.body
       end
 
-      # List releases
-      #
-      # @param repo_name [String] Repository name
-      # @param params [Hash] Query parameters
-      # @option params [Integer] :limit Number of results to return
-      # @option params [String] :cursor Pagination cursor
-      # @option params [Boolean] :include_raw Include raw response from the integration
-      # @return [Hash] Releases data with pagination info
+      # Fetches releases for a specific repository from the connected Git provider.
       def releases(repo_name, params = {})
-        include_raw = params.delete(:include_raw) || false
-        params[:repo_name] = repo_name
-        request(:get, "/#{API_VERSION}/git/releases", params, include_raw: include_raw)
+        encoded_repo_name = URI.encode_www_form_component(repo_name)
+
+        response = connection.get("git/repos/#{encoded_repo_name}/releases") do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch git/repos/#{encoded_repo_name}/releases: #{response.status}" unless response.success?
+
+        response.body
       end
     end
   end

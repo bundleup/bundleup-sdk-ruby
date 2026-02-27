@@ -2,18 +2,17 @@
 
 module Bundleup
   module Unify
-    # Chat resource for unified chat operations
+    # Client for chat-related Unify endpoints.
     class Chat < Base
-      # List channels
-      #
-      # @param params [Hash] Query parameters
-      # @option params [Integer] :limit Number of results to return
-      # @option params [String] :cursor Pagination cursor
-      # @option params [Boolean] :include_raw Include raw response from the integration
-      # @return [Hash] Channels data with pagination info
+      # Fetches channels from the connected chat provider.
       def channels(params = {})
-        include_raw = params.delete(:include_raw) || false
-        request(:get, "/#{API_VERSION}/chat/channels", params, include_raw: include_raw)
+        response = connection.get('chat/channels') do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch chat/channels: #{response.status}" unless response.success?
+
+        response.body
       end
     end
   end

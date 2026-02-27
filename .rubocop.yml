@@ -1,23 +1,81 @@
 # RuboCop configuration
 
+require:
+  - rubocop-rspec
+
 AllCops:
   NewCops: enable
   TargetRubyVersion: 2.7
+  SuggestExtensions: false
+
+# Load RuboCop plugins
+plugins:
+  - rubocop-rake
+
+# Disable all Capybara cops (transitive dependency from rubocop-rspec)
+Capybara/RSpec/PredicateMatcher:
+  Enabled: false
+Capybara/CurrentPathExpectation:
+  Enabled: false
+Capybara/MatchStyle:
+  Enabled: false
+Capybara/NegationMatcher:
+  Enabled: false
+Capybara/SpecificActions:
+  Enabled: false
+Capybara/SpecificFinders:
+  Enabled: false
+Capybara/SpecificMatcher:
+  Enabled: false
+Capybara/VisibilityMatcher:
+  Enabled: false
+
+# Disable all FactoryBot cops (transitive dependency from rubocop-rspec)
+FactoryBot/AttributeDefinedStatically:
+  Enabled: false
+FactoryBot/ConsistentParenthesesStyle:
+  Enabled: false
+FactoryBot/CreateList:
+  Enabled: false
+FactoryBot/FactoryClassName:
+  Enabled: false
+FactoryBot/FactoryNameStyle:
+  Enabled: false
+FactoryBot/SyntaxMethods:
+  Enabled: false
 
 # Disable BlockLength for RSpec files as it's standard practice
 # RSpec describe blocks can be long and that's expected
 Metrics/BlockLength:
   Exclude:
-    - 'spec/**/*_spec.rb'
+    - "spec/**/*_spec.rb"
 
 # Increase thresholds slightly for AbcSize to accommodate existing code
 Metrics/AbcSize:
   Max: 25
 
-# Increase threshold slightly for MethodLength to accommodate existing code  
+# Increase threshold slightly for MethodLength to accommodate existing code
 Metrics/MethodLength:
   Max: 15
 
 # Allow development dependencies in gemspec (common practice)
 Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+# RSpec configuration - adjust for integration/API tests
+RSpec/MultipleExpectations:
+  Max: 3
+
+RSpec/ExampleLength:
+  Max: 20
+
+# Allow identical equality assertions (testing memoization)
+RSpec/IdenticalEqualityAssertion:
+  Enabled: false
+
+# Disable file path format checks (not critical for SDK)
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
   Enabled: false

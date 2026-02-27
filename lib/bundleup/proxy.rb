@@ -1,117 +1,73 @@
 # frozen_string_literal: true
 
 module Bundleup
-  # Proxy class for making direct calls to integration APIs
+  # Client for proxy API requests.
   class Proxy
     BASE_URL = 'https://proxy.bundleup.io'
 
     attr_reader :api_key, :connection_id
 
-    # Initialize a new Proxy instance
-    #
-    # @param api_key [String] Your BundleUp API key
-    # @param connection_id [String] The connection ID
     def initialize(api_key, connection_id)
       @api_key = api_key
       @connection_id = connection_id
     end
 
-    # Make a GET request
-    #
-    # @param path [String] The request path (can include query parameters)
-    # @param headers [Hash] Additional headers
-    # @return [Hash] Response data
     def get(path, headers: {})
-      request(:get, path, nil, headers)
+      raise ArgumentError, 'Path is required for GET request' unless path
+
+      # Merge any additional headers
+      request_headers = connection.headers.merge(headers)
+      connection.get(path, nil, request_headers)
     end
 
-    # Make a POST request
-    #
-    # @param path [String] The request path
-    # @param body [Hash] Request body
-    # @param headers [Hash] Additional headers
-    # @return [Hash] Response data
-    def post(path, body = {}, headers: {})
-      request(:post, path, body, headers)
+    def post(path, body: {}, headers: {})
+      raise ArgumentError, 'Path is required for POST request' unless path
+
+      # Merge any additional headers
+      request_headers = connection.headers.merge(headers)
+      connection.post(path, body.to_json, request_headers)
     end
 
-    # Make a PUT request
-    #
-    # @param path [String] The request path
-    # @param body [Hash] Request body
-    # @param headers [Hash] Additional headers
-    # @return [Hash] Response data
-    def put(path, body = {}, headers: {})
-      request(:put, path, body, headers)
+    def put(path, body: {}, headers: {})
+      raise ArgumentError, 'Path is required for PUT request' unless path
+
+      # Merge any additional headers
+      request_headers = connection.headers.merge(headers)
+      connection.put(path, body.to_json, request_headers)
     end
 
-    # Make a PATCH request
-    #
-    # @param path [String] The request path
-    # @param body [Hash] Request body
-    # @param headers [Hash] Additional headers
-    # @return [Hash] Response data
-    def patch(path, body = {}, headers: {})
-      request(:patch, path, body, headers)
+    def patch(path, body: {}, headers: {})
+      raise ArgumentError, 'Path is required for PATCH request' unless path
+
+      # Merge any additional headers
+      request_headers = connection.headers.merge(headers)
+      connection.patch(path, body.to_json, request_headers)
     end
 
-    # Make a DELETE request
-    #
-    # @param path [String] The request path (can include query parameters)
-    # @param headers [Hash] Additional headers
-    # @return [Hash] Response data
     def delete(path, headers: {})
-      request(:delete, path, nil, headers)
+      raise ArgumentError, 'Path is required for DELETE request' unless path
+
+      # Merge any additional headers
+      request_headers = connection.headers.merge(headers)
+      connection.delete(path, nil, request_headers)
     end
 
     private
 
-    def request(method, path, body = nil, headers = {})
-      response = connection.public_send(method) do |req|
-        req.url path
-        req.headers['Content-Type'] = 'application/json'
-        req.headers['Authorization'] = "Bearer #{api_key}"
-        req.headers['BU-Connection-Id'] = connection_id
-        headers.each { |key, value| req.headers[key] = value }
-
-        if body && %i[post patch put].include?(method)
-          req.body = body.to_json
-        end
-      end
-
-      handle_response(response)
-    rescue Faraday::Error => e
-      raise APIError, "Proxy request failed: #{e.message}"
-    end
-
+    # Memoize the Faraday connection to reuse it across requests
     def connection
-      @connection ||= Faraday.new(url: BASE_URL) do |conn|
-        conn.request :retry, max: 3, interval: 0.5, backoff_factor: 2
-        conn.adapter Faraday.default_adapter
-      end
-    end
+      @connection ||= Faraday.new(url: BASE_URL) do |faraday|
+        faraday.headers = {
+          'Authorization' => "Bearer #{@api_key}",
+          'Content-Type' => 'application/json',
+          'BU-Connection-Id' => @connection_id
+        }
 
-    def handle_response(response)
-      case response.status
-      when 200..299
-        response.body.empty? ? {} : JSON.parse(response.body)
-      when 401
-        raise AuthenticationError, 'Invalid API key'
-      when 400..499
-        error_message = extract_error_message(response)
-        raise InvalidRequestError, error_message
-      when 500..599
-        raise APIError, 'Server error occurred'
-      else
-        raise APIError, "Unexpected response status: #{response.status}"
+        faraday.request :json
+        faraday.response :json, content_type: /\bjson$/
+        faraday.response :raise_error
+        faraday.adapter Faraday.default_adapter
       end
-    end
-
-    def extract_error_message(response)
-      body = JSON.parse(response.body)
-      body['error'] || body['message'] || "Request failed with status #{response.status}"
-    rescue JSON::ParserError
-      "Request failed with status #{response.status}"
     end
   end
 end
