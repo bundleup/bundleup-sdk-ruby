@@ -65,7 +65,7 @@ jobs:
 
       - name: Build gem
         run: |
-          gem build bundleup.gemspec
+          gem build bundleup-sdk.gemspec
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
