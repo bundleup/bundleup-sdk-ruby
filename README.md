@@ -472,7 +472,7 @@ class WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    signature = request.headers['X-Bundleup-Signature']
+    signature = request.headers['Bundleup-Signature']
     payload = request.body.read
 
     unless verify_signature(payload, signature)
@@ -1019,7 +1019,7 @@ We welcome contributions to the BundleUp Ruby SDK! Here's how you can help:
 This gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
 
 ```
-Copyright (c) 2024 BundleUp
+Copyright (c) 2026 BundleUp
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
