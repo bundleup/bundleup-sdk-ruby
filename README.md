@@ -10,6 +10,7 @@ Official Ruby SDK for the [BundleUp](https://bundleup.io) API. Connect to 100+ i
 - [Installation](#installation)
 - [Requirements](#requirements)
 - [Features](#features)
+- [Examples](#examples)
 - [Quick Start](#quick-start)
 - [Authentication](#authentication)
 - [Core Concepts](#core-concepts)
@@ -76,6 +77,15 @@ The BundleUp SDK is tested and supported on:
 - 🛡️ **Error Handling** - Comprehensive error messages and validation
 - 📚 **Well Documented** - Extensive documentation and examples
 - 🧪 **Tested** - Comprehensive test suite with RSpec
+
+## Examples
+
+Runnable examples are available in the [`examples/`](./examples) directory:
+
+- [`examples/basic_usage.rb`](./examples/basic_usage.rb) - Client setup, connections, integrations, and webhooks
+- [`examples/proxy_api.rb`](./examples/proxy_api.rb) - Proxy API GET request with a connection
+- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, and PM endpoint usage
+- [`examples/README.md`](./examples/README.md) - Setup and execution instructions
 
 ## Quick Start
 
