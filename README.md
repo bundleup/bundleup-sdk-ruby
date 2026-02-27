@@ -388,7 +388,6 @@ webhook = client.webhooks.create(
 - `connection.created` - Triggered when a new connection is established
 - `connection.deleted` - Triggered when a connection is removed
 - `connection.updated` - Triggered when a connection is modified
-- `connection.expired` - Triggered when a connection expires
 
 **Request Body:**
 
