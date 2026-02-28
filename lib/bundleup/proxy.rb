@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Bundleup
+module BundleUp
   # Client for proxy API requests.
   class Proxy
     BASE_URL = 'https://proxy.bundleup.io'

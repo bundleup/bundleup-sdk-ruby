@@ -4,7 +4,7 @@ require_relative 'lib/bundleup/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'bundleup-sdk'
-  spec.version       = Bundleup::VERSION
+  spec.version       = BundleUp::VERSION
   spec.authors       = ['BundleUp']
   spec.email         = ['support@bundleup.io']
 

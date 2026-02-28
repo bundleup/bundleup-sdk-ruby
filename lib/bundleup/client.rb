@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Bundleup
+module BundleUp
   # Client for core BundleUp API resources.
   class Client
     attr_reader :api_key
@@ -12,15 +12,15 @@ module Bundleup
     end
 
     def connections
-      @connections ||= Bundleup::Resources::Connection.new(@api_key)
+      @connections ||= BundleUp::Resources::Connection.new(@api_key)
     end
 
     def integrations
-      @integrations ||= Bundleup::Resources::Integration.new(@api_key)
+      @integrations ||= BundleUp::Resources::Integration.new(@api_key)
     end
 
     def webhooks
-      @webhooks ||= Bundleup::Resources::Webhook.new(@api_key)
+      @webhooks ||= BundleUp::Resources::Webhook.new(@api_key)
     end
 
     def proxy(connection_id)
@@ -28,7 +28,7 @@ module Bundleup
         raise ArgumentError, 'Connection ID is required to create a Proxy instance.'
       end
 
-      Bundleup::Proxy.new(@api_key, connection_id)
+      BundleUp::Proxy.new(@api_key, connection_id)
     end
 
     def unify(connection_id)
@@ -36,7 +36,7 @@ module Bundleup
         raise ArgumentError, 'Connection ID is required to create a Unify instance.'
       end
 
-      Bundleup::Unify::Client.new(@api_key, connection_id)
+      BundleUp::Unify::Client.new(@api_key, connection_id)
     end
   end
 end

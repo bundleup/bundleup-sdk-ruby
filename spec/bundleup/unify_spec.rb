@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Bundleup::Unify::Client do
+RSpec.describe BundleUp::Unify::Client do
   describe '#initialize' do
     let(:api_key) { 'test_api_key' }
     let(:connection_id) { 'conn_123' }
@@ -13,9 +13,9 @@ RSpec.describe Bundleup::Unify::Client do
     end
 
     it 'initializes pm, chat, and git instances' do
-      expect(client.instance_variable_get(:@pm)).to be_a(Bundleup::Unify::PM)
-      expect(client.instance_variable_get(:@chat)).to be_a(Bundleup::Unify::Chat)
-      expect(client.instance_variable_get(:@git)).to be_a(Bundleup::Unify::Git)
+      expect(client.instance_variable_get(:@pm)).to be_a(BundleUp::Unify::PM)
+      expect(client.instance_variable_get(:@chat)).to be_a(BundleUp::Unify::Chat)
+      expect(client.instance_variable_get(:@git)).to be_a(BundleUp::Unify::Git)
     end
   end
 end

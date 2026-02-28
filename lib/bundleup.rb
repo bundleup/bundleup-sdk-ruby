@@ -20,5 +20,5 @@ require_relative 'bundleup/unify/git'
 require_relative 'bundleup/unify/pm'
 
 # Main module for the BundleUp SDK.
-module Bundleup
+module BundleUp
 end

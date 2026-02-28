@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Bundleup
+module BundleUp
   module Unify
     # Client for chat-related Unify endpoints.
     class Chat < Base

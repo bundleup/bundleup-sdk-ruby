@@ -8,7 +8,7 @@ if api_key.nil? || api_key.empty?
   abort 'BUNDLEUP_API_KEY is required'
 end
 
-client = Bundleup::Client.new(api_key)
+client = BundleUp::Client.new(api_key)
 
 puts 'BundleUp Ruby SDK: basic usage'
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Bundleup
+module BundleUp
   module Resources
     # Client for webhook API endpoints.
     class Webhook < Base

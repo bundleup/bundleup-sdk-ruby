@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Bundleup::Resources::Webhook do
+RSpec.describe BundleUp::Resources::Webhook do
   let(:api_key) { 'test_api_key' }
   let(:instance) { described_class.new(api_key) }
   let(:base_url) { 'https://api.bundleup.io/v1' }

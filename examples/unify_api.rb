@@ -13,9 +13,9 @@ if connection_id.nil? || connection_id.empty?
   abort 'BUNDLEUP_CONNECTION_ID is required for unify example'
 end
 
-chat = Bundleup::Unify::Chat.new(api_key, connection_id)
-git = Bundleup::Unify::Git.new(api_key, connection_id)
-pm = Bundleup::Unify::PM.new(api_key, connection_id)
+chat = BundleUp::Unify::Chat.new(api_key, connection_id)
+git = BundleUp::Unify::Git.new(api_key, connection_id)
+pm = BundleUp::Unify::PM.new(api_key, connection_id)
 
 puts 'Unify API example'
 

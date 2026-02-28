@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Bundleup
+module BundleUp
   module Unify
     # Base class for Unify API clients.
     class Base

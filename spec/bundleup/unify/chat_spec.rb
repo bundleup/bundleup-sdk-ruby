@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Bundleup::Unify::Chat do
+RSpec.describe BundleUp::Unify::Chat do
   let(:api_key) { 'test_api_key' }
   let(:connection_id) { 'conn_123' }
   let(:instance) { described_class.new(api_key, connection_id) }

@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Bundleup::Client do
+RSpec.describe BundleUp::Client do
   describe '#initialize' do
     it 'creates a client with a valid API key' do
       client = described_class.new('test_api_key')
@@ -26,7 +26,7 @@ RSpec.describe Bundleup::Client do
     let(:client) { described_class.new('test_api_key') }
 
     it 'returns a Connection instance' do
-      expect(client.connections).to be_a(Bundleup::Resources::Connection)
+      expect(client.connections).to be_a(BundleUp::Resources::Connection)
     end
 
     it 'memoizes the instance' do
@@ -38,7 +38,7 @@ RSpec.describe Bundleup::Client do
     let(:client) { described_class.new('test_api_key') }
 
     it 'returns an Integration instance' do
-      expect(client.integrations).to be_a(Bundleup::Resources::Integration)
+      expect(client.integrations).to be_a(BundleUp::Resources::Integration)
     end
 
     it 'memoizes the instance' do
@@ -50,7 +50,7 @@ RSpec.describe Bundleup::Client do
     let(:client) { described_class.new('test_api_key') }
 
     it 'returns a Webhook instance' do
-      expect(client.webhooks).to be_a(Bundleup::Resources::Webhook)
+      expect(client.webhooks).to be_a(BundleUp::Resources::Webhook)
     end
 
     it 'memoizes the instance' do
@@ -63,7 +63,7 @@ RSpec.describe Bundleup::Client do
 
     it 'returns a Proxy instance' do
       proxy = client.proxy('conn_123')
-      expect(proxy).to be_a(Bundleup::Proxy)
+      expect(proxy).to be_a(BundleUp::Proxy)
       expect(proxy.connection_id).to eq('conn_123')
     end
 
@@ -87,7 +87,7 @@ RSpec.describe Bundleup::Client do
 
     it 'returns a Unify::Client instance' do
       unify = client.unify('conn_123')
-      expect(unify).to be_a(Bundleup::Unify::Client)
+      expect(unify).to be_a(BundleUp::Unify::Client)
     end
 
     it 'raises an error when connection_id is nil' do

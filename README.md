@@ -95,7 +95,7 @@ Get started with BundleUp in just a few lines of code:
 require 'bundleup'
 
 # Initialize the client
-client = Bundleup::Client.new(ENV['BUNDLEUP_API_KEY'])
+client = BundleUp::Client.new(ENV['BUNDLEUP_API_KEY'])
 
 # List all active connections
 connections = client.connections.list
@@ -129,10 +129,10 @@ The BundleUp SDK uses API keys for authentication. You can obtain your API key f
 require 'bundleup'
 
 # Initialize with API key
-client = Bundleup::Client.new('your_api_key_here')
+client = BundleUp::Client.new('your_api_key_here')
 
 # Or use environment variable (recommended)
-client = Bundleup::Client.new(ENV['BUNDLEUP_API_KEY'])
+client = BundleUp::Client.new(ENV['BUNDLEUP_API_KEY'])
 ```
 
 ### Security Best Practices
@@ -164,14 +164,14 @@ Then in your application:
 require 'dotenv/load'
 require 'bundleup'
 
-client = Bundleup::Client.new(ENV['BUNDLEUP_API_KEY'])
+client = BundleUp::Client.new(ENV['BUNDLEUP_API_KEY'])
 ```
 
 **For Rails applications:**
 
 ```ruby
 # config/initializers/bundleup.rb
-BUNDLEUP_CLIENT = Bundleup::Client.new(ENV['BUNDLEUP_API_KEY'])
+BUNDLEUP_CLIENT = BundleUp::Client.new(ENV['BUNDLEUP_API_KEY'])
 ```
 
 ## Core Concepts
@@ -482,7 +482,7 @@ class WebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    signature = request.headers['Bundleup-Signature']
+    signature = request.headers['BundleUp-Signature']
     payload = request.body.read
 
     unless verify_signature(payload, signature)
