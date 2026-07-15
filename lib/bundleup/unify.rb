@@ -7,7 +7,7 @@ module BundleUp
       attr_reader :api_key, :connection_id
 
       def initialize(api_key, connection_id)
-        @pm = BundleUp::Unify::PM.new(api_key, connection_id)
+        @ticketing = BundleUp::Unify::Ticketing.new(api_key, connection_id)
         @chat = BundleUp::Unify::Chat.new(api_key, connection_id)
         @git = BundleUp::Unify::Git.new(api_key, connection_id)
       end

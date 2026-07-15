@@ -17,7 +17,7 @@ require_relative 'bundleup/resources/webhook'
 require_relative 'bundleup/unify/base'
 require_relative 'bundleup/unify/chat'
 require_relative 'bundleup/unify/git'
-require_relative 'bundleup/unify/pm'
+require_relative 'bundleup/unify/ticketing'
 
 # Main module for the BundleUp SDK.
 module BundleUp
