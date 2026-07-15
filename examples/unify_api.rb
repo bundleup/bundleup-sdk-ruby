@@ -9,8 +9,6 @@ abort 'BUNDLEUP_API_KEY is required' if api_key.nil? || api_key.empty?
 
 abort 'BUNDLEUP_CONNECTION_ID is required for unify example' if connection_id.nil? || connection_id.empty?
 
-chat = BundleUp::Unify::Chat.new(api_key, connection_id)
-git = BundleUp::Unify::Git.new(api_key, connection_id)
 ticketing = BundleUp::Unify::Ticketing.new(api_key, connection_id)
 client = BundleUp::Client.new(api_key)
 unify = client.unify(connection_id)
