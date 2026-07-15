@@ -34,9 +34,7 @@ module BundleUp
 
         response = connection.post("chat/channels/#{encoded_channel_id}/message", { text: text }.to_json)
 
-        unless response.success?
-          raise "Failed to post chat/channels/#{encoded_channel_id}/message: #{response.status}"
-        end
+        raise "Failed to post chat/channels/#{encoded_channel_id}/message: #{response.status}" unless response.success?
 
         response.body
       end
