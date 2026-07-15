@@ -12,8 +12,8 @@ RSpec.describe BundleUp::Unify::Client do
       expect(client).to be_a(described_class)
     end
 
-    it 'initializes pm, chat, and git instances' do
-      expect(client.instance_variable_get(:@pm)).to be_a(BundleUp::Unify::PM)
+    it 'initializes ticketing, chat, and git instances' do
+      expect(client.instance_variable_get(:@ticketing)).to be_a(BundleUp::Unify::Ticketing)
       expect(client.instance_variable_get(:@chat)).to be_a(BundleUp::Unify::Chat)
       expect(client.instance_variable_get(:@git)).to be_a(BundleUp::Unify::Git)
     end

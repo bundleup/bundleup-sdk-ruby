@@ -2,11 +2,9 @@
 
 require 'bundleup'
 
-api_key = ENV['BUNDLEUP_API_KEY']
+api_key = ENV.fetch('BUNDLEUP_API_KEY', nil)
 
-if api_key.nil? || api_key.empty?
-  abort 'BUNDLEUP_API_KEY is required'
-end
+abort 'BUNDLEUP_API_KEY is required' if api_key.nil? || api_key.empty?
 
 client = BundleUp::Client.new(api_key)
 

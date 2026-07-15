@@ -83,7 +83,7 @@ Runnable examples are available in the [`examples/`](./examples) directory:
 
 - [`examples/basic_usage.rb`](./examples/basic_usage.rb) - Client setup, connections, integrations, and webhooks
 - [`examples/proxy_api.rb`](./examples/proxy_api.rb) - Proxy API GET request with a connection
-- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, and PM endpoint usage
+- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, and Ticketing endpoint usage
 - [`examples/README.md`](./examples/README.md) - Setup and execution instructions
 
 ## Quick Start
@@ -840,20 +840,20 @@ puts "Releases: #{result['data']}"
 }
 ```
 
-#### Project Management API
+#### Ticketing API
 
-The PM API provides a unified interface for project management platforms like Jira, Linear, and Asana.
+The Ticketing API provides a unified interface for ticketing and project management platforms like Jira, Linear, and Asana.
 
-##### List Issues
+##### List Tickets
 
 ```ruby
-result = unify.pm.issues(
+result = unify.ticketing.tickets(
   limit: 100,
   after: nil,
   include_raw: false
 )
 
-puts "Issues: #{result['data']}"
+puts "Tickets: #{result['data']}"
 ```
 
 **Response:**
@@ -880,8 +880,8 @@ puts "Issues: #{result['data']}"
 **Filtering and sorting:**
 
 ```ruby
-open_issues = result['data'].select { |issue| issue['status'] == 'open' }
-sorted_by_date = result['data'].sort_by { |issue| Time.parse(issue['created_at']) }.reverse
+open_tickets = result['data'].select { |ticket| ticket['status'] == 'open' }
+sorted_by_date = result['data'].sort_by { |ticket| Time.parse(ticket['created_at']) }.reverse
 ```
 
 ## Error Handling
@@ -937,7 +937,7 @@ lib/
 │       ├── base.rb          # Base Unify class
 │       ├── chat.rb          # Chat Unify API
 │       ├── git.rb           # Git Unify API
-│       └── pm.rb            # PM Unify API
+│       └── ticketing.rb     # Ticketing Unify API
 spec/                        # Test files
 ```
 

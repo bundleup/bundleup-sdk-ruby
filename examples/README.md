@@ -26,4 +26,4 @@ ruby examples/unify_api.rb
 
 - `basic_usage.rb` — initialize the SDK and list connections, integrations, and webhooks
 - `proxy_api.rb` — send a GET request through the Proxy API
-- `unify_api.rb` — call Unify Chat, Git, and PM endpoints
+- `unify_api.rb` — call Unify Chat, Git, and Ticketing endpoints

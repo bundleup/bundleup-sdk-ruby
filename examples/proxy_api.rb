@@ -2,17 +2,13 @@
 
 require 'bundleup'
 
-api_key = ENV['BUNDLEUP_API_KEY']
-connection_id = ENV['BUNDLEUP_CONNECTION_ID']
+api_key = ENV.fetch('BUNDLEUP_API_KEY', nil)
+connection_id = ENV.fetch('BUNDLEUP_CONNECTION_ID', nil)
 path = ENV.fetch('BUNDLEUP_PROXY_PATH', '/users')
 
-if api_key.nil? || api_key.empty?
-  abort 'BUNDLEUP_API_KEY is required'
-end
+abort 'BUNDLEUP_API_KEY is required' if api_key.nil? || api_key.empty?
 
-if connection_id.nil? || connection_id.empty?
-  abort 'BUNDLEUP_CONNECTION_ID is required for proxy example'
-end
+abort 'BUNDLEUP_CONNECTION_ID is required for proxy example' if connection_id.nil? || connection_id.empty?
 
 client = BundleUp::Client.new(api_key)
 proxy = client.proxy(connection_id)

@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.12'
   spec.add_development_dependency 'rubocop', '~> 1.50'
+  spec.add_development_dependency 'rubocop-capybara', '< 2.23'
   spec.add_development_dependency 'rubocop-rake', '~> 0.6'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.20', '< 2.26'
   spec.add_development_dependency 'vcr', '~> 6.1'
