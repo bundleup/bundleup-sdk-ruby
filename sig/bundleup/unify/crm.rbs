@@ -1,0 +1,12 @@
+module BundleUp
+  module Unify
+    class CRM < Base
+      type crm_company = { id: String, name: String, website: String? }
+      type crm_contact = { id: String, name: String, email: String? }
+      type metadata = { next: String? }
+
+      def companies: (?Hash[Symbol, untyped] params) -> { data: Array[crm_company], metadata: metadata }
+      def contacts: (?Hash[Symbol, untyped] params) -> { data: Array[crm_contact], metadata: metadata }
+    end
+  end
+end

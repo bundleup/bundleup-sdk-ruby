@@ -8,6 +8,35 @@ RSpec.describe BundleUp::Unify::Chat do
   let(:instance) { described_class.new(api_key, connection_id) }
   let(:base_url) { 'https://unify.bundleup.io/v1' }
 
+  describe '#users' do
+    it 'makes a GET request to users endpoint' do
+      stub = stub_request(:get, "#{base_url}/chat/users")
+             .with(
+               headers: {
+                 'Authorization' => "Bearer #{api_key}",
+                 'Content-Type' => 'application/json',
+                 'BU-Connection-Id' => connection_id
+               }
+             )
+             .to_return(
+               status: 200,
+               body: '{"data":[{"id":"u_1","name":"Jane Doe"}]}',
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = instance.users
+      expect(result).to eq({ 'data' => [{ 'id' => 'u_1', 'name' => 'Jane Doe' }] })
+      expect(stub).to have_been_requested
+    end
+
+    it 'raises error on 401' do
+      stub_request(:get, "#{base_url}/chat/users")
+        .to_return(status: 401, body: '{"error":"Unauthorized"}')
+
+      expect { instance.users }.to raise_error(Faraday::UnauthorizedError)
+    end
+  end
+
   describe '#channels' do
     it 'makes a GET request to channels endpoint' do
       stub = stub_request(:get, "#{base_url}/chat/channels")
@@ -53,6 +82,41 @@ RSpec.describe BundleUp::Unify::Chat do
         .to_return(status: 401, body: '{"error":"Unauthorized"}')
 
       expect { instance.channels }.to raise_error(Faraday::UnauthorizedError)
+    end
+  end
+
+  describe '#message' do
+    it 'makes a POST request to the channel message endpoint' do
+      stub = stub_request(:post, "#{base_url}/chat/channels/ch_1/message")
+             .with(
+               body: { text: 'Hello!' }.to_json,
+               headers: {
+                 'Authorization' => "Bearer #{api_key}",
+                 'Content-Type' => 'application/json',
+                 'BU-Connection-Id' => connection_id
+               }
+             )
+             .to_return(
+               status: 200,
+               body: '{"data":{"ok":true}}',
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = instance.message('ch_1', 'Hello!')
+      expect(result).to eq({ 'data' => { 'ok' => true } })
+      expect(stub).to have_been_requested
+    end
+
+    it 'raises an ArgumentError when channel_id is missing' do
+      expect { instance.message(nil, 'Hello!') }.to raise_error(ArgumentError)
+    end
+
+    it 'encodes the channel id in the URL' do
+      stub = stub_request(:post, "#{base_url}/chat/channels/general%2Froom/message")
+             .to_return(status: 200, body: '{"data":{}}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.message('general/room', 'Hello!')
+      expect(stub).to have_been_requested
     end
   end
 end

@@ -4,6 +4,17 @@ module BundleUp
   module Unify
     # Client for chat-related Unify endpoints.
     class Chat < Base
+      # Fetches users from the connected chat provider.
+      def users(params = {})
+        response = connection.get('chat/users') do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch chat/users: #{response.status}" unless response.success?
+
+        response.body
+      end
+
       # Fetches channels from the connected chat provider.
       def channels(params = {})
         response = connection.get('chat/channels') do |req|
@@ -11,6 +22,21 @@ module BundleUp
         end
 
         raise "Failed to fetch chat/channels: #{response.status}" unless response.success?
+
+        response.body
+      end
+
+      # Sends a message to a channel on the connected chat provider.
+      def message(channel_id, text)
+        raise ArgumentError, 'channel_id is required to send a message.' if channel_id.nil?
+
+        encoded_channel_id = URI.encode_www_form_component(channel_id)
+
+        response = connection.post("chat/channels/#{encoded_channel_id}/message", { text: text }.to_json)
+
+        unless response.success?
+          raise "Failed to post chat/channels/#{encoded_channel_id}/message: #{response.status}"
+        end
 
         response.body
       end

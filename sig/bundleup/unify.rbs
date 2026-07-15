@@ -1,0 +1,16 @@
+module BundleUp
+  module Unify
+    class Client
+      attr_reader api_key: String
+      attr_reader connection_id: String
+
+      def initialize: (String api_key, String connection_id) -> void
+
+      def chat: () -> Chat
+      def git: () -> Git
+      def pm: () -> PM
+      def crm: () -> CRM
+      def drive: () -> Drive
+    end
+  end
+end

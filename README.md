@@ -83,7 +83,7 @@ Runnable examples are available in the [`examples/`](./examples) directory:
 
 - [`examples/basic_usage.rb`](./examples/basic_usage.rb) - Client setup, connections, integrations, and webhooks
 - [`examples/proxy_api.rb`](./examples/proxy_api.rb) - Proxy API GET request with a connection
-- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, and Ticketing endpoint usage
+- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, PM, Ticketing, and Drive endpoint usage
 - [`examples/README.md`](./examples/README.md) - Setup and execution instructions
 
 ## Quick Start
@@ -640,6 +640,43 @@ unify = client.unify('conn_123abc')
 
 The Chat API provides a unified interface for chat platforms like Slack, Discord, and Microsoft Teams.
 
+##### List Users
+
+Retrieve a list of users from the connected chat platform.
+
+```ruby
+result = unify.chat.users(
+  limit: 100,
+  after: nil,
+  include_raw: false
+)
+
+puts "Users: #{result['data']}"
+puts "Next cursor: #{result['metadata']['next']}"
+```
+
+**Parameters:**
+
+- `limit` (Integer, optional): Maximum number of users to return (default: 100, max: 1000)
+- `after` (String, optional): Pagination cursor from previous response
+- `include_raw` (Boolean, optional): Include raw API response from the integration (default: false)
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'id' => 'U1234567890',
+      'name' => 'Jane Doe'
+    }
+  ],
+  'metadata' => {
+    'next' => 'cursor_abc123'
+  }
+}
+```
+
 ##### List Channels
 
 Retrieve a list of channels from the connected chat platform.
@@ -698,6 +735,31 @@ loop do
 end
 
 puts "Fetched #{all_channels.length} total channels"
+```
+
+##### Send Message
+
+Send a message to a channel on the connected chat platform.
+
+```ruby
+result = unify.chat.message('C1234567890', 'Hello from BundleUp! :wave:')
+
+puts "Message sent: #{result['data']}"
+```
+
+**Parameters:**
+
+- `channel_id` (String, required): The ID of the channel to send the message to
+- `text` (String, required): Markdown-formatted message text
+
+**Response:**
+
+```ruby
+{
+  'data' => {
+    # Raw response data from the chat provider
+  }
+}
 ```
 
 #### Git API
@@ -840,6 +902,31 @@ puts "Releases: #{result['data']}"
 }
 ```
 
+##### List Branches
+
+```ruby
+result = unify.git.branches('organization/repo-name', limit: 50)
+
+puts "Branches: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'name' => 'main',
+      'commit_sha' => 'abc123def456',
+      'protected' => true
+    }
+  ],
+  'metadata' => {
+    'next' => nil
+  }
+}
+```
+
 #### Ticketing API
 
 The Ticketing API provides a unified interface for ticketing and project management platforms like Jira, Linear, and Asana.
@@ -882,6 +969,106 @@ puts "Tickets: #{result['data']}"
 ```ruby
 open_tickets = result['data'].select { |ticket| ticket['status'] == 'open' }
 sorted_by_date = result['data'].sort_by { |ticket| Time.parse(ticket['created_at']) }.reverse
+```
+
+#### CRM API
+
+The CRM API provides a unified interface for CRM platforms like Attio, HubSpot, PipeDrive, Salesforce and Zoho.
+
+##### List Companies
+
+```ruby
+result = unify.crm.companies(
+  limit: 100,
+  after: nil,
+  include_raw: false
+)
+
+puts "Companies: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'id' => '12345',
+      'name' => 'Acme Inc.',
+      'website' => 'https://acme.example.com'
+    }
+  ],
+  'metadata' => {
+    'next' => nil
+  }
+}
+```
+
+##### List Contacts
+
+```ruby
+result = unify.crm.contacts(
+  limit: 100,
+  after: nil,
+  include_raw: false
+)
+
+puts "Contacts: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'id' => '67890',
+      'name' => 'Jane Doe',
+      'email' => 'jane@acme.example.com'
+    }
+  ],
+  'metadata' => {
+    'next' => nil
+  }
+}
+```
+
+#### Drive API
+
+The Drive API provides a unified interface for file storage platforms like Google Drive, OneDrive, Box, Dropbox and Microsoft SharePoint.
+
+##### List Files
+
+```ruby
+result = unify.drive.files(
+  limit: 100,
+  after: nil,
+  include_raw: false
+)
+
+puts "Files: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'id' => 'file_123',
+      'name' => 'quarterly-report.pdf',
+      'mime_type' => 'application/pdf',
+      'size' => 204800,
+      'created_at' => '2024-01-15T10:30:00Z',
+      'updated_at' => '2024-01-20T14:22:00Z',
+      'url' => 'https://drive.example.com/file_123',
+      'is_folder' => false
+    }
+  ],
+  'metadata' => {
+    'next' => nil
+  }
+}
 ```
 
 ## Error Handling
@@ -937,8 +1124,20 @@ lib/
 │       ├── base.rb          # Base Unify class
 │       ├── chat.rb          # Chat Unify API
 │       ├── git.rb           # Git Unify API
-│       └── ticketing.rb     # Ticketing Unify API
+│       ├── ticketing.rb     # Ticketing Unify API
+│       ├── crm.rb           # CRM Unify API
+│       └── drive.rb         # Drive Unify API
+sig/                         # RBS type signatures (mirrors lib/)
 spec/                        # Test files
+```
+
+### Type Signatures
+
+The gem ships [RBS](https://github.com/ruby/rbs) signatures for the Unify API under `sig/bundleup/unify/`. They're optional at runtime (deleting `sig/` doesn't change behavior) but give editors and `rbs` itself static types for `unify.chat.channels`, `unify.git.repos`, and so on.
+
+```bash
+# Validate the signature files
+bundle exec rake sig
 ```
 
 ### Running Tests

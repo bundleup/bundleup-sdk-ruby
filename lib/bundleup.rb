@@ -18,6 +18,8 @@ require_relative 'bundleup/unify/base'
 require_relative 'bundleup/unify/chat'
 require_relative 'bundleup/unify/git'
 require_relative 'bundleup/unify/ticketing'
+require_relative 'bundleup/unify/crm'
+require_relative 'bundleup/unify/drive'
 
 # Main module for the BundleUp SDK.
 module BundleUp

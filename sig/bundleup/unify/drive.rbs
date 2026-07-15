@@ -1,0 +1,20 @@
+module BundleUp
+  module Unify
+    class Drive < Base
+      type drive_file = {
+        id: String,
+        name: String,
+        mime_type: String?,
+        size: Integer?,
+        created_at: String?,
+        updated_at: String?,
+        url: String?,
+        is_folder: bool
+      }
+
+      type metadata = { next: String? }
+
+      def files: (?Hash[Symbol, untyped] params) -> { data: Array[drive_file], metadata: metadata }
+    end
+  end
+end

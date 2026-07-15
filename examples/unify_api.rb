@@ -12,18 +12,27 @@ abort 'BUNDLEUP_CONNECTION_ID is required for unify example' if connection_id.ni
 chat = BundleUp::Unify::Chat.new(api_key, connection_id)
 git = BundleUp::Unify::Git.new(api_key, connection_id)
 ticketing = BundleUp::Unify::Ticketing.new(api_key, connection_id)
+client = BundleUp::Client.new(api_key)
+unify = client.unify(connection_id)
 
 puts 'Unify API example'
 
 begin
-  channels = chat.channels(limit: 10)
+  users = unify.chat.users(limit: 10)
+  puts "Chat users: #{users['data']&.length || 0}"
+rescue StandardError => e
+  warn "Failed to fetch chat users: #{e.message}"
+end
+
+begin
+  channels = unify.chat.channels(limit: 10)
   puts "Chat channels: #{channels['data']&.length || 0}"
 rescue StandardError => e
   warn "Failed to fetch chat channels: #{e.message}"
 end
 
 begin
-  repos = git.repos(limit: 10)
+  repos = unify.git.repos(limit: 10)
   puts "Git repos: #{repos['data']&.length || 0}"
 rescue StandardError => e
   warn "Failed to fetch git repos: #{e.message}"
@@ -34,4 +43,18 @@ begin
   puts "Ticketing tickets: #{tickets['data']&.length || 0}"
 rescue StandardError => e
   warn "Failed to fetch tickets: #{e.message}"
+end
+
+begin
+  companies = unify.crm.companies(limit: 10)
+  puts "CRM companies: #{companies['data']&.length || 0}"
+rescue StandardError => e
+  warn "Failed to fetch CRM companies: #{e.message}"
+end
+
+begin
+  files = unify.drive.files(limit: 10)
+  puts "Drive files: #{files['data']&.length || 0}"
+rescue StandardError => e
+  warn "Failed to fetch Drive files: #{e.message}"
 end

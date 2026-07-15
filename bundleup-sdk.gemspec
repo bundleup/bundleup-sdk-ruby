@@ -21,12 +21,13 @@ Gem::Specification.new do |spec|
     'rubygems_mfa_required' => 'true'
   }
 
-  spec.files         = Dir['lib/**/*', 'LICENSE', 'README.md', 'CHANGELOG.md']
+  spec.files         = Dir['lib/**/*', 'sig/**/*', 'LICENSE', 'README.md', 'CHANGELOG.md']
   spec.require_paths = ['lib']
 
   spec.add_dependency 'faraday', '~> 2.0'
 
   spec.add_development_dependency 'rake', '~> 13.0'
+  spec.add_development_dependency 'rbs', '~> 3.0'
   spec.add_development_dependency 'rspec', '~> 3.12'
   spec.add_development_dependency 'rubocop', '~> 1.50'
   spec.add_development_dependency 'rubocop-capybara', '< 2.23'

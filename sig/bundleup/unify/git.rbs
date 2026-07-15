@@ -1,0 +1,53 @@
+module BundleUp
+  module Unify
+    class Git < Base
+      type git_repo = {
+        id: Integer | String,
+        name: String,
+        full_name: String,
+        description: String?,
+        url: String,
+        created_at: String,
+        updated_at: String,
+        pushed_at: String
+      }
+
+      type git_pull = {
+        id: Integer,
+        number: Integer,
+        title: String,
+        description: String?,
+        draft: bool,
+        state: String,
+        url: String,
+        user: String,
+        created_at: String,
+        updated_at: String,
+        merged_at: String?
+      }
+
+      type git_tag = { name: String, commit_sha: String }
+
+      type git_release = {
+        id: Integer,
+        name: String,
+        tag_name: String,
+        description: String,
+        prerelease: bool,
+        url: String,
+        created_at: String,
+        released_at: String
+      }
+
+      type git_branch = { name: String, commit_sha: String, protected: bool }
+
+      type metadata = { next: String? }
+
+      def repos: (?Hash[Symbol, untyped] params) -> { data: Array[git_repo], metadata: metadata }
+      def pulls: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_pull], metadata: metadata }
+      def tags: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_tag], metadata: metadata }
+      def releases: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_release], metadata: metadata }
+      def branches: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_branch], metadata: metadata }
+    end
+  end
+end

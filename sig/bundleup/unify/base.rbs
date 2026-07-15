@@ -1,0 +1,17 @@
+module BundleUp
+  module Unify
+    class Base
+      BASE_URL: String
+      API_VERSION: String
+
+      attr_reader api_key: String
+      attr_reader connection_id: String
+
+      def initialize: (String api_key, String connection_id) -> void
+
+      private
+
+      def connection: () -> Faraday::Connection
+    end
+  end
+end

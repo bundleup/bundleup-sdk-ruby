@@ -12,10 +12,20 @@ RSpec.describe BundleUp::Unify::Client do
       expect(client).to be_a(described_class)
     end
 
-    it 'initializes ticketing, chat, and git instances' do
-      expect(client.instance_variable_get(:@ticketing)).to be_a(BundleUp::Unify::Ticketing)
-      expect(client.instance_variable_get(:@chat)).to be_a(BundleUp::Unify::Chat)
-      expect(client.instance_variable_get(:@git)).to be_a(BundleUp::Unify::Git)
+    it 'exposes ticketing, chat, git, crm, and drive instances' do # rubocop:disable RSpec/MultipleExpectations
+      expect(client.ticketing).to be_a(BundleUp::Unify::Ticketing)
+      expect(client.chat).to be_a(BundleUp::Unify::Chat)
+      expect(client.git).to be_a(BundleUp::Unify::Git)
+      expect(client.crm).to be_a(BundleUp::Unify::CRM)
+      expect(client.drive).to be_a(BundleUp::Unify::Drive)
+    end
+
+    it 'memoizes each accessor' do # rubocop:disable RSpec/MultipleExpectations
+      expect(client.chat).to be(client.chat)
+      expect(client.git).to be(client.git)
+      expect(client.ticketing).to be(client.ticketing)
+      expect(client.crm).to be(client.crm)
+      expect(client.drive).to be(client.drive)
     end
   end
 end

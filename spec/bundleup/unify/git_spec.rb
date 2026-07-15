@@ -124,4 +124,26 @@ RSpec.describe BundleUp::Unify::Git do
       expect { instance.releases('owner/invalid') }.to raise_error(Faraday::ResourceNotFound)
     end
   end
+
+  describe '#branches' do
+    it 'makes a GET request with encoded repo name' do
+      stub = stub_request(:get, "#{base_url}/git/repos/owner%2Frepo/branches")
+             .with(
+               headers: {
+                 'Authorization' => "Bearer #{api_key}",
+                 'Content-Type' => 'application/json',
+                 'BU-Connection-Id' => connection_id
+               }
+             )
+             .to_return(
+               status: 200,
+               body: '{"data":[{"name":"main","commit_sha":"abc123","protected":true}]}',
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = instance.branches('owner/repo')
+      expect(result).to eq({ 'data' => [{ 'name' => 'main', 'commit_sha' => 'abc123', 'protected' => true }] })
+      expect(stub).to have_been_requested
+    end
+  end
 end

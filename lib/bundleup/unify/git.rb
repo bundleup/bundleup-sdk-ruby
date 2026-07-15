@@ -53,6 +53,19 @@ module BundleUp
 
         response.body
       end
+
+      # Fetches branches for a specific repository from the connected Git provider.
+      def branches(repo_name, params = {})
+        encoded_repo_name = URI.encode_www_form_component(repo_name)
+
+        response = connection.get("git/repos/#{encoded_repo_name}/branches") do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch git/repos/#{encoded_repo_name}/branches: #{response.status}" unless response.success?
+
+        response.body
+      end
     end
   end
 end

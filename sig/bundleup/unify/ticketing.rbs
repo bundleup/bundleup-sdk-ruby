@@ -1,0 +1,19 @@
+module BundleUp
+  module Unify
+    class Ticketing < Base
+      type ticketing_ticket = {
+        id: String,
+        title: String,
+        status: String,
+        url: String,
+        description: String?,
+        created_at: String,
+        updated_at: String
+      }
+
+      type metadata = { next: String? }
+
+      def issues: (?Hash[Symbol, untyped] params) -> { data: Array[ticketing_ticket], metadata: metadata }
+    end
+  end
+end
