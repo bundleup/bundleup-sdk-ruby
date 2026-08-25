@@ -84,7 +84,7 @@ module BundleUp
 
     def default_headers
       headers = {
-        'Authorization' => "******",
+        'Authorization' => '******',
         'Content-Type' => 'application/json',
         'Accept' => 'application/json, text/event-stream',
         'BU-Connection-Id' => @connection_id
