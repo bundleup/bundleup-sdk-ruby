@@ -17,7 +17,10 @@ RSpec.describe BundleUp::MCP do
 
   # The handshake (initialize, then notifications/initialized) followed by
   # whatever the test expects next, all on one stub.
-  def stub_session(*responses, target: 'https://mcp.bundleup.io', session_id: 'sess_123')
+  def stub_session(*responses)
+    opts = responses.last.is_a?(Hash) && !responses.last.key?(:body) ? responses.pop : {}
+    target = opts.fetch(:target, 'https://mcp.bundleup.io')
+    session_id = opts.fetch(:session_id, 'sess_123')
     stub_request(:post, target)
       .to_return(
         { body: rpc(1, result: { 'protocolVersion' => '2025-06-18' }).to_json,
