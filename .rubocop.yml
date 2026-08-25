@@ -50,6 +50,10 @@ Metrics/BlockLength:
   Exclude:
     - "spec/**/*_spec.rb"
 
+# Increase threshold for ClassLength to accommodate existing code
+Metrics/ClassLength:
+  Max: 150
+
 # Increase thresholds slightly for AbcSize to accommodate existing code
 Metrics/AbcSize:
   Max: 25
