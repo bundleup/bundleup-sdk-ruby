@@ -31,18 +31,18 @@ RSpec.describe BundleUp::Unify::MCP do
     end
   end
 
-  describe '#tools' do
+  describe '#list_tools' do
     it 'lists tools against the Unified server' do
       stub_session({ body: rpc(2, { 'tools' => [tool] }).to_json,
                      headers: { 'Content-Type' => 'application/json' } })
 
-      expect(unified.tools).to eq([tool])
+      expect(unified.list_tools).to eq([tool])
     end
   end
 
-  describe '#tool' do
+  describe '#call_tool' do
     it 'requires a tool name' do
-      expect { unified.tool('') }.to raise_error(ArgumentError, /Tool name is required/)
+      expect { unified.call_tool('') }.to raise_error(ArgumentError, /Tool name is required/)
     end
 
     it 'reuses one session across calls' do
@@ -51,8 +51,8 @@ RSpec.describe BundleUp::Unify::MCP do
         { body: rpc(3, { 'content' => [] }).to_json, headers: { 'Content-Type' => 'application/json' } }
       )
 
-      unified.tools
-      unified.tool('send_message')
+      unified.list_tools
+      unified.call_tool('send_message')
 
       expect(a_request(:post, url).with(body: /"method":"initialize"/)).to have_been_made.once
     end
