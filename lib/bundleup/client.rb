@@ -38,5 +38,13 @@ module BundleUp
 
       BundleUp::Unify::Client.new(@api_key, connection_id)
     end
+
+    def mcp(connection_id)
+      if connection_id.nil? || connection_id.empty?
+        raise ArgumentError, 'Connection ID is required to create an MCP instance.'
+      end
+
+      BundleUp::MCP.new(@api_key, connection_id)
+    end
   end
 end

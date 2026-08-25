@@ -6,6 +6,7 @@ require_relative 'bundleup/version'
 require_relative 'bundleup/client'
 require_relative 'bundleup/proxy'
 require_relative 'bundleup/unify'
+require_relative 'bundleup/mcp'
 
 # Resources
 require_relative 'bundleup/resources/base'
@@ -20,6 +21,7 @@ require_relative 'bundleup/unify/git'
 require_relative 'bundleup/unify/ticketing'
 require_relative 'bundleup/unify/crm'
 require_relative 'bundleup/unify/drive'
+require_relative 'bundleup/unify/mcp'
 
 # Main module for the BundleUp SDK.
 module BundleUp

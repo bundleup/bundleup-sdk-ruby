@@ -40,6 +40,11 @@ module BundleUp
       def drive
         @drive ||= BundleUp::Unify::Drive.new(api_key, connection_id)
       end
+
+      # Access the Unified MCP server for the connection.
+      def mcp
+        @mcp ||= BundleUp::Unify::MCP.new(api_key, connection_id)
+      end
     end
   end
 end
