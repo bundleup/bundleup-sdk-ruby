@@ -113,7 +113,7 @@ RSpec.describe BundleUp::MCP do
     it 'runs before the first call' do
       stub_session(json_response(rpc(2, result: { 'tools' => [tool] })))
 
-      mcp.connect.tools
+      mcp.connect.list_tools
 
       expect(a_request(:post, url).with(body: /"method":"initialize"/)).to have_been_made.once
     end
@@ -125,8 +125,8 @@ RSpec.describe BundleUp::MCP do
       )
 
       client = mcp.connect
-      client.tools
-      client.resources
+      client.list_tools
+      client.list_resources
 
       expect(a_request(:post, url).with(body: /"method":"initialize"/)).to have_been_made.once
     end
@@ -134,7 +134,7 @@ RSpec.describe BundleUp::MCP do
     it 'replays the session ID' do
       stub_session(json_response(rpc(2, result: { 'tools' => [] })), session_id: 'sess_abc')
 
-      mcp.connect.tools
+      mcp.connect.list_tools
 
       # Everything after initialize carries it.
       expect(
@@ -144,11 +144,11 @@ RSpec.describe BundleUp::MCP do
     end
   end
 
-  describe '#tools' do
+  describe '#list_tools' do
     it 'returns the provider tool list' do
       stub_session(json_response(rpc(2, result: { 'tools' => [tool] })))
 
-      expect(mcp.connect.tools).to eq([tool])
+      expect(mcp.connect.list_tools).to eq([tool])
     end
 
     it 'follows nextCursor pagination' do
@@ -157,7 +157,7 @@ RSpec.describe BundleUp::MCP do
         json_response(rpc(3, result: { 'tools' => [tool.merge('name' => 'list_issues')] }))
       )
 
-      expect(mcp.connect.tools.length).to eq(2)
+      expect(mcp.connect.list_tools.length).to eq(2)
     end
 
     it 'parses a result delivered as an event stream' do
@@ -165,28 +165,28 @@ RSpec.describe BundleUp::MCP do
                "event: message\r\ndata: #{rpc(2, result: { 'tools' => [tool] }).to_json}\r\n\r\n"
       stub_session({ body: stream, headers: { 'Content-Type' => 'text/event-stream' } })
 
-      expect(mcp.connect.tools).to eq([tool])
+      expect(mcp.connect.list_tools).to eq([tool])
     end
   end
 
-  describe '#tool' do
+  describe '#call_tool' do
     it 'sends the name and arguments' do
       stub_session(json_response(rpc(2, result: { 'content' => [] })))
 
-      mcp.connect.tool('create_issue', { title: 'Login broken' })
+      mcp.connect.call_tool('create_issue', { title: 'Login broken' })
 
       expect(a_request(:post, url).with(body: /"name":"create_issue"/)).to have_been_made
     end
 
     it 'requires a tool name' do
-      expect { mcp.connect.tool('') }.to raise_error(ArgumentError, /Tool name is required/)
+      expect { mcp.connect.call_tool('') }.to raise_error(ArgumentError, /Tool name is required/)
     end
 
     it 'surfaces a JSON-RPC error' do
       failure = rpc(2, error: { 'code' => -32_602, 'message' => 'Unknown tool' })
       stub_session(json_response(failure))
 
-      expect { mcp.connect.tool('nope') }.to raise_error(/Unknown tool/)
+      expect { mcp.connect.call_tool('nope') }.to raise_error(/Unknown tool/)
     end
   end
 
@@ -195,29 +195,29 @@ RSpec.describe BundleUp::MCP do
       resource = { 'uri' => 'file:///readme.md', 'name' => 'readme' }
       stub_session(json_response(rpc(2, result: { 'resources' => [resource] })))
 
-      expect(mcp.connect.resources).to eq([resource])
+      expect(mcp.connect.list_resources).to eq([resource])
     end
 
     it 'reads a resource by URI' do
       stub_session(json_response(rpc(2, result: { 'contents' => [] })))
 
-      mcp.connect.resource('file:///readme.md')
+      mcp.connect.read_resource('file:///readme.md')
 
       expect(a_request(:post, url).with(body: %r{"uri":"file:///readme.md"})).to have_been_made
     end
 
     it 'requires a resource URI' do
-      expect { mcp.connect.resource('') }.to raise_error(ArgumentError, /Resource URI is required/)
+      expect { mcp.connect.read_resource('') }.to raise_error(ArgumentError, /Resource URI is required/)
     end
 
     it 'lists prompts' do
       stub_session(json_response(rpc(2, result: { 'prompts' => [{ 'name' => 'x' }] })))
 
-      expect(mcp.connect.prompts).to eq([{ 'name' => 'x' }])
+      expect(mcp.connect.list_prompts).to eq([{ 'name' => 'x' }])
     end
 
     it 'requires a prompt name' do
-      expect { mcp.connect.prompt('') }.to raise_error(ArgumentError, /Prompt name is required/)
+      expect { mcp.connect.get_prompt('') }.to raise_error(ArgumentError, /Prompt name is required/)
     end
 
     it 'sends an arbitrary method' do
@@ -236,13 +236,13 @@ RSpec.describe BundleUp::MCP do
       body = { status: 400, code: 'connection_invalid', message: 'Missing or invalid connection ID' }
       stub_request(:post, url).to_return(status: 400, body: body.to_json)
 
-      expect { mcp.connect.tools }.to raise_error(/Missing or invalid connection ID \(connection_invalid\)/)
+      expect { mcp.connect.list_tools }.to raise_error(/Missing or invalid connection ID \(connection_invalid\)/)
     end
 
     it 'falls back to the status when the body is not JSON' do
       stub_request(:post, url).to_return(status: 504, body: 'gateway timeout')
 
-      expect { mcp.connect.tools }.to raise_error(/MCP request failed with status 504/)
+      expect { mcp.connect.list_tools }.to raise_error(/MCP request failed with status 504/)
     end
   end
 
@@ -252,7 +252,7 @@ RSpec.describe BundleUp::MCP do
       request = stub_request(:delete, url).with(headers: { 'Mcp-Session-Id' => 'sess_xyz' })
 
       client = mcp.connect
-      client.tools
+      client.list_tools
       client.close
 
       expect(request).to have_been_requested
@@ -262,6 +262,63 @@ RSpec.describe BundleUp::MCP do
       mcp.connect.close
 
       expect(a_request(:delete, url)).not_to have_been_made
+    end
+  end
+end
+
+RSpec.describe BundleUp::Unify::MCP do
+  subject(:unified) { described_class.new(api_key, connection_id) }
+
+  let(:api_key) { 'test-api-key' }
+  let(:connection_id) { 'conn_123' }
+  let(:url) { 'https://unify.bundleup.io/v1/mcp' }
+  let(:tool) { { 'name' => 'send_message' } }
+
+  def rpc(id, result)
+    { 'jsonrpc' => '2.0', 'id' => id, 'result' => result }
+  end
+
+  # Handshake plus whatever follows, on one stub — a second stub_request for
+  # the same verb and URL would shadow this one.
+  def stub_session(*responses)
+    stub_request(:post, url).to_return(
+      { body: rpc(1, { 'protocolVersion' => '2025-06-18' }).to_json,
+        headers: { 'Content-Type' => 'application/json' } },
+      { body: '', status: 202 },
+      *responses
+    )
+  end
+
+  describe '#hosted' do
+    it 'targets the Unified server with a composite token' do
+      expect(unified.hosted).to eq(url: url, token: "#{api_key}.#{connection_id}")
+    end
+  end
+
+  describe '#list_tools' do
+    it 'lists tools against the Unified server' do
+      stub_session({ body: rpc(2, { 'tools' => [tool] }).to_json,
+                     headers: { 'Content-Type' => 'application/json' } })
+
+      expect(unified.list_tools).to eq([tool])
+    end
+  end
+
+  describe '#call_tool' do
+    it 'requires a tool name' do
+      expect { unified.call_tool('') }.to raise_error(ArgumentError, /Tool name is required/)
+    end
+
+    it 'reuses one session across calls' do
+      stub_session(
+        { body: rpc(2, { 'tools' => [] }).to_json, headers: { 'Content-Type' => 'application/json' } },
+        { body: rpc(3, { 'content' => [] }).to_json, headers: { 'Content-Type' => 'application/json' } }
+      )
+
+      unified.list_tools
+      unified.call_tool('send_message')
+
+      expect(a_request(:post, url).with(body: /"method":"initialize"/)).to have_been_made.once
     end
   end
 end

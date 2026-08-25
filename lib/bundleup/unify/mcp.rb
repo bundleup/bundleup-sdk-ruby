@@ -29,15 +29,15 @@ module BundleUp
       end
 
       # List the available unified tools.
-      def tools
-        @client.tools
+      def list_tools
+        @client.list_tools
       end
 
       # Call a unified tool with optional arguments.
-      def tool(name, args = {})
+      def call_tool(name, args = {})
         raise ArgumentError, 'Tool name is required to call a tool.' if name.nil? || name.to_s.empty?
 
-        @client.tool(name, args)
+        @client.call_tool(name, args)
       end
     end
   end
