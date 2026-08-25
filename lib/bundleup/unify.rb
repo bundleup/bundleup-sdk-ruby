@@ -41,6 +41,14 @@ module BundleUp
         @drive ||= BundleUp::Unify::Drive.new(api_key, connection_id)
       end
 
+      # Fetch the account this connection is authenticated as.
+      #
+      # `me` is the one unified method every provider implements, so it hangs off
+      # the Unify client directly instead of a vertical namespace.
+      def me(params = {})
+        (@me ||= BundleUp::Unify::Me.new(api_key, connection_id)).get(params)
+      end
+
       # Access the Unified MCP server for the connection.
       def mcp
         @mcp ||= BundleUp::Unify::MCP.new(api_key, connection_id)

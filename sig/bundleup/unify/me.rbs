@@ -1,0 +1,14 @@
+module BundleUp
+  module Unify
+    class Me < Base
+      type account = {
+        id: String?,
+        name: String?,
+        email: String?,
+        avatar_url: String?
+      }
+
+      def get: (?Hash[Symbol, untyped] params) -> { data: account }
+    end
+  end
+end

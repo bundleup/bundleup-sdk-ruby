@@ -11,6 +11,7 @@ module BundleUp
       def pm: () -> PM
       def crm: () -> CRM
       def drive: () -> Drive
+      def me: (?Hash[Symbol, untyped] params) -> { data: Me::account }
     end
   end
 end

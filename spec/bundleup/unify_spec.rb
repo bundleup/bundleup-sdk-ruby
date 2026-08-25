@@ -27,5 +27,23 @@ RSpec.describe BundleUp::Unify::Client do
       expect(client.crm).to be(client.crm)
       expect(client.drive).to be(client.drive)
     end
+
+    it 'exposes me as a method rather than a namespace' do
+      expect(client.method(:me).arity).to eq(-1)
+    end
+
+    it 'fetches the connected account through the root me endpoint' do
+      stub = stub_request(:get, 'https://unify.bundleup.io/v1/me')
+             .to_return(
+               status: 200,
+               body: '{"data":{"id":"u_1","name":"Ada","email":null,"avatar_url":null}}',
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      expect(client.me).to eq(
+        { 'data' => { 'id' => 'u_1', 'name' => 'Ada', 'email' => nil, 'avatar_url' => nil } }
+      )
+      expect(stub).to have_been_requested
+    end
   end
 end
