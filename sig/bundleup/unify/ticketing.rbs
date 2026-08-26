@@ -11,9 +11,25 @@ module BundleUp
         updated_at: String
       }
 
+      type ticket = {
+        id: String,
+        title: String,
+        status: String?,
+        url: String?,
+        description: String?,
+        created_at: String?,
+        updated_at: String?
+      }
+
       type metadata = { next: String? }
 
-      def issues: (?Hash[Symbol, untyped] params) -> { data: Array[ticketing_ticket], metadata: metadata }
+      def tickets: (?Hash[Symbol, untyped] params) -> { data: Array[ticketing_ticket], metadata: metadata }
+
+      def ticket: (String ticket_id, ?Hash[Symbol, untyped] params) -> { data: ticket }
+
+      private
+
+      def blank?: (untyped) -> bool
     end
   end
 end

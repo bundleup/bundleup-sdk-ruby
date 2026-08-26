@@ -1,0 +1,23 @@
+module BundleUp
+  module Unify
+    class Calendar < Base
+      type calendar_event = {
+        id: String,
+        title: String?,
+        description: String?,
+        start_date: String?,
+        end_date: String?,
+        status: String?,
+        url: String?
+      }
+
+      type metadata = { next: String? }
+
+      def events: (?Hash[Symbol, untyped] params) -> { data: Array[calendar_event], metadata: metadata }
+
+      private
+
+      def window_missing?: (Hash[Symbol, untyped]?) -> bool
+    end
+  end
+end

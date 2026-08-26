@@ -83,7 +83,7 @@ Runnable examples are available in the [`examples/`](./examples) directory:
 
 - [`examples/basic_usage.rb`](./examples/basic_usage.rb) - Client setup, connections, integrations, and webhooks
 - [`examples/proxy_api.rb`](./examples/proxy_api.rb) - Proxy API GET request with a connection
-- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, PM, Ticketing, and Drive endpoint usage
+- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, PM, Ticketing, Drive, and Calendar endpoint usage
 - [`examples/README.md`](./examples/README.md) - Setup and execution instructions
 
 ## Quick Start
@@ -737,6 +737,35 @@ end
 puts "Fetched #{all_channels.length} total channels"
 ```
 
+##### List Messages
+
+Messages in one channel, newest first. `author.name` is nil on Slack, which returns only a user id on a message.
+
+```ruby
+result = unify.chat.messages('C123', limit: 100, after: nil, include_raw: false)
+
+puts "Messages: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'id' => '1755712345.123456',
+      'text' => 'Deploy finished',
+      'author' => { 'id' => 'U024BE7LH', 'name' => nil },
+      'created_at' => '2026-08-20T18:32:25.123Z',
+      'thread_id' => nil
+    }
+  ],
+  'metadata' => {
+    'next' => 'cursor_def456'
+  }
+}
+```
+
 ##### Send Message
 
 Send a message to a channel on the connected chat platform.
@@ -971,6 +1000,34 @@ open_tickets = result['data'].select { |ticket| ticket['status'] == 'open' }
 sorted_by_date = result['data'].sort_by { |ticket| Time.parse(ticket['created_at']) }.reverse
 ```
 
+##### Get a Ticket
+
+Fetch one ticket by ID. Not supported by Basecamp, whose API only serves a to-do underneath its project.
+
+```ruby
+result = unify.ticketing.ticket('PROJ-123')
+
+puts "Ticket: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => {
+    'id' => 'PROJ-123',
+    'url' => 'https://jira.example.com/browse/PROJ-123',
+    'title' => 'Fix login bug',
+    'status' => 'in_progress',
+    'description' => 'Users are unable to log in',
+    'created_at' => '2024-01-15T10:30:00Z',
+    'updated_at' => '2024-01-20T14:22:00Z'
+  }
+}
+```
+
+A single resource carries no pagination, so there is no `metadata` on this response.
+
 #### CRM API
 
 The CRM API provides a unified interface for CRM platforms like Attio, HubSpot, PipeDrive, Salesforce and Zoho.
@@ -1071,6 +1128,49 @@ puts "Files: #{result['data']}"
 }
 ```
 
+#### Calendar API
+
+The Calendar API provides a unified interface for calendar and scheduling platforms like Google Calendar, Outlook, Calendly and Zoom.
+
+##### List Events
+
+`starts_after` and `starts_before` are required — the endpoint refuses an unbounded listing.
+
+```ruby
+result = unify.calendar.events(
+  starts_after: '2026-09-01T00:00:00Z',
+  starts_before: '2026-09-08T00:00:00Z',
+  limit: 100,
+  after: nil,
+  include_raw: false
+)
+
+puts "Events: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'id' => 'evt_123',
+      'title' => 'Design review',
+      'description' => 'Walk through the new onboarding flow',
+      'start_date' => '2026-09-01T15:00:00Z',
+      'end_date' => '2026-09-01T16:00:00Z',
+      'status' => 'confirmed',
+      'url' => 'https://calendar.google.com/event?eid=...'
+    }
+  ],
+  'metadata' => {
+    'next' => nil
+  }
+}
+```
+
+Recurring events are expanded into their occurrences. All-day events carry a `YYYY-MM-DD` date rather than a timestamp. Attendees, conferencing links and organizers are available through `include_raw` or the Proxy API.
+
 ## Error Handling
 
 The SDK raises exceptions for errors. Always wrap SDK calls in rescue blocks for proper error handling.
@@ -1126,7 +1226,8 @@ lib/
 │       ├── git.rb           # Git Unify API
 │       ├── ticketing.rb     # Ticketing Unify API
 │       ├── crm.rb           # CRM Unify API
-│       └── drive.rb         # Drive Unify API
+│       ├── drive.rb         # Drive Unify API
+│       └── calendar.rb      # Calendar Unify API
 sig/                         # RBS type signatures (mirrors lib/)
 spec/                        # Test files
 ```

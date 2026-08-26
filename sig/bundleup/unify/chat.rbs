@@ -3,10 +3,21 @@ module BundleUp
     class Chat < Base
       type chat_user = { id: String, name: String }
       type chat_channel = { id: String, name: String }
+      type chat_author = { id: String?, name: String? }
+
+      type chat_message = {
+        id: String,
+        text: String?,
+        author: chat_author?,
+        created_at: String?,
+        thread_id: String?
+      }
+
       type metadata = { next: String? }
 
       def users: (?Hash[Symbol, untyped] params) -> { data: Array[chat_user], metadata: metadata }
       def channels: (?Hash[Symbol, untyped] params) -> { data: Array[chat_channel], metadata: metadata }
+      def messages: (String channel_id, ?Hash[Symbol, untyped] params) -> { data: Array[chat_message], metadata: metadata }
       def message: (String channel_id, String text) -> { data: Hash[String, untyped] }
     end
   end

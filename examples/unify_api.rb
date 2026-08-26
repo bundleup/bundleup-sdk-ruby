@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'time'
+
 require 'bundleup'
 
 api_key = ENV.fetch('BUNDLEUP_API_KEY', nil)
@@ -25,6 +27,13 @@ end
 begin
   channels = unify.chat.channels(limit: 10)
   puts "Chat channels: #{channels['data']&.length || 0}"
+
+  channel = channels['data']&.first
+
+  if channel
+    messages = unify.chat.messages(channel['id'], limit: 10)
+    puts "Messages in #{channel['name']}: #{messages['data']&.length || 0}"
+  end
 rescue StandardError => e
   warn "Failed to fetch chat channels: #{e.message}"
 end
@@ -39,6 +48,13 @@ end
 begin
   tickets = ticketing.tickets(limit: 10)
   puts "Ticketing tickets: #{tickets['data']&.length || 0}"
+
+  first = tickets['data']&.first
+
+  if first
+    ticket = ticketing.ticket(first['id'])
+    puts "Ticket #{ticket['data']['id']}: #{ticket['data']['title']}"
+  end
 rescue StandardError => e
   warn "Failed to fetch tickets: #{e.message}"
 end
@@ -55,4 +71,15 @@ begin
   puts "Drive files: #{files['data']&.length || 0}"
 rescue StandardError => e
   warn "Failed to fetch Drive files: #{e.message}"
+end
+
+begin
+  events = unify.calendar.events(
+    starts_after: Time.now.utc.iso8601,
+    starts_before: (Time.now.utc + (7 * 24 * 60 * 60)).iso8601,
+    limit: 10
+  )
+  puts "Calendar events: #{events['data']&.length || 0}"
+rescue StandardError => e
+  warn "Failed to fetch Calendar events: #{e.message}"
 end

@@ -12,6 +12,7 @@ module BundleUp
         @git = BundleUp::Unify::Git.new(api_key, connection_id)
         @crm = BundleUp::Unify::CRM.new(api_key, connection_id)
         @drive = BundleUp::Unify::Drive.new(api_key, connection_id)
+        @calendar = BundleUp::Unify::Calendar.new(api_key, connection_id)
         @api_key = api_key
         @connection_id = connection_id
       end
@@ -39,6 +40,11 @@ module BundleUp
       # Access the Drive API for the connection.
       def drive
         @drive ||= BundleUp::Unify::Drive.new(api_key, connection_id)
+      end
+
+      # Access the Calendar API for the connection.
+      def calendar
+        @calendar ||= BundleUp::Unify::Calendar.new(api_key, connection_id)
       end
 
       # Fetch the account this connection is authenticated as.

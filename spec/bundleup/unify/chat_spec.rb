@@ -119,4 +119,48 @@ RSpec.describe BundleUp::Unify::Chat do
       expect(stub).to have_been_requested
     end
   end
+
+  describe '#messages' do
+    it 'makes a GET request to the channel messages endpoint' do
+      stub = stub_request(:get, "#{base_url}/chat/channels/ch_1/messages")
+             .with(
+               headers: {
+                 'Authorization' => "Bearer #{api_key}",
+                 'Content-Type' => 'application/json',
+                 'BU-Connection-Id' => connection_id
+               }
+             )
+             .to_return(
+               status: 200,
+               body: '{"data":[{"id":"1755712345.123456","text":"Hello!"}]}',
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = instance.messages('ch_1')
+      expect(result).to eq({ 'data' => [{ 'id' => '1755712345.123456', 'text' => 'Hello!' }] })
+      expect(stub).to have_been_requested
+    end
+
+    it 'passes paging options through as query params' do
+      stub = stub_request(:get, "#{base_url}/chat/channels/ch_1/messages")
+             .with(query: { limit: 20, after: 'cursor_1' })
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.messages('ch_1', limit: 20, after: 'cursor_1')
+      expect(stub).to have_been_requested
+    end
+
+    it 'raises an ArgumentError when channel_id is missing' do
+      expect { instance.messages(nil) }
+        .to raise_error(ArgumentError, 'channel_id is required to fetch messages.')
+    end
+
+    it 'encodes the channel id in the URL' do
+      stub = stub_request(:get, "#{base_url}/chat/channels/general%2Froom/messages")
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.messages('general/room')
+      expect(stub).to have_been_requested
+    end
+  end
 end

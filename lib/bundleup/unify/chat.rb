@@ -26,6 +26,26 @@ module BundleUp
         response.body
       end
 
+      # Fetches messages in a channel from the connected chat provider.
+      #
+      # Newest first. +author.name+ is nil on Slack, which returns only a user
+      # id on a message.
+      def messages(channel_id, params = {})
+        raise ArgumentError, 'channel_id is required to fetch messages.' if channel_id.nil?
+
+        encoded_channel_id = URI.encode_www_form_component(channel_id)
+
+        response = connection.get("chat/channels/#{encoded_channel_id}/messages") do |req|
+          req.params = params
+        end
+
+        unless response.success?
+          raise "Failed to fetch chat/channels/#{encoded_channel_id}/messages: #{response.status}"
+        end
+
+        response.body
+      end
+
       # Sends a message to a channel on the connected chat provider.
       def message(channel_id, text)
         raise ArgumentError, 'channel_id is required to send a message.' if channel_id.nil?
