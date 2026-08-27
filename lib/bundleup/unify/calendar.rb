@@ -23,7 +23,7 @@ module BundleUp
       private
 
       def window_missing?(params)
-        params = params || {}
+        params ||= {}
 
         %i[starts_after starts_before].any? do |key|
           value = params[key] || params[key.to_s]
