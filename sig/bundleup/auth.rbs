@@ -1,0 +1,31 @@
+module BundleUp
+  class Auth
+    BASE_URL: String
+
+    type connection = {
+      "connection_id" => String,
+      "external_id" => String?,
+      "integration_id" => String
+    }
+
+    attr_reader api_key: String
+
+    def initialize: (String api_key) -> void
+
+    def build_authorization_url: (
+      client_id: String,
+      integration_id: String,
+      redirect_uri: String,
+      ?external_id: String?,
+      ?state: String?
+    ) -> String
+
+    def get_connection_from_code: (code: String, redirect_uri: String) -> connection
+
+    private
+
+    def blank?: (untyped value) -> bool
+
+    def connection: () -> untyped
+  end
+end

@@ -33,6 +33,17 @@ module BundleUp
         response.body
       end
 
+      # Fetches projects from the connected ticketing tool.
+      def projects(params = {})
+        response = connection.get('ticketing/projects') do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch ticketing/projects: #{response.status}" unless response.success?
+
+        response.body
+      end
+
       private
 
       def blank?(value)

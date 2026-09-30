@@ -26,6 +26,19 @@ module BundleUp
         merged_at: String?
       }
 
+      type git_issue = {
+        id: Integer,
+        number: Integer,
+        title: String,
+        description: String?,
+        state: String,
+        url: String,
+        user: String?,
+        created_at: String,
+        updated_at: String,
+        closed_at: String?
+      }
+
       type git_tag = { name: String, commit_sha: String }
 
       type git_release = {
@@ -41,13 +54,24 @@ module BundleUp
 
       type git_branch = { name: String, commit_sha: String, protected: bool }
 
+      type git_commit = {
+        sha: String,
+        message: String?,
+        url: String,
+        author: String?,
+        author_email: String?,
+        committed_at: String?
+      }
+
       type metadata = { next: String? }
 
       def repos: (?Hash[Symbol, untyped] params) -> { data: Array[git_repo], metadata: metadata }
       def pulls: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_pull], metadata: metadata }
+      def issues: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_issue], metadata: metadata }
       def tags: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_tag], metadata: metadata }
       def releases: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_release], metadata: metadata }
       def branches: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_branch], metadata: metadata }
+      def commits: (String repo_name, ?Hash[Symbol, untyped] params) -> { data: Array[git_commit], metadata: metadata }
     end
   end
 end

@@ -4,6 +4,7 @@ require 'faraday'
 
 require_relative 'bundleup/version'
 require_relative 'bundleup/client'
+require_relative 'bundleup/auth'
 require_relative 'bundleup/proxy'
 require_relative 'bundleup/unify'
 require_relative 'bundleup/mcp'

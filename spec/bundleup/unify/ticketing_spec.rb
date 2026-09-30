@@ -108,4 +108,41 @@ RSpec.describe BundleUp::Unify::Ticketing do
       expect { instance.ticket('TKT-1') }.to raise_error(Faraday::ResourceNotFound)
     end
   end
+
+  describe '#projects' do
+    it 'makes a GET request to projects endpoint' do
+      stub = stub_request(:get, "#{base_url}/ticketing/projects")
+             .with(
+               headers: {
+                 'Authorization' => "Bearer #{api_key}",
+                 'Content-Type' => 'application/json',
+                 'BU-Connection-Id' => connection_id
+               }
+             )
+             .to_return(
+               status: 200,
+               body: '{"data":[{"id":"PRJ-1","name":"Roadmap"}]}',
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = instance.projects
+      expect(result).to eq({ 'data' => [{ 'id' => 'PRJ-1', 'name' => 'Roadmap' }] })
+      expect(stub).to have_been_requested
+    end
+
+    it 'supports paging parameters' do
+      stub = stub_request(:get, "#{base_url}/ticketing/projects?after=cursor_1&limit=5")
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.projects(limit: 5, after: 'cursor_1')
+      expect(stub).to have_been_requested
+    end
+
+    it 'raises error on 401' do
+      stub_request(:get, "#{base_url}/ticketing/projects")
+        .to_return(status: 401, body: '{"error":"Unauthorized"}')
+
+      expect { instance.projects }.to raise_error(Faraday::UnauthorizedError)
+    end
+  end
 end

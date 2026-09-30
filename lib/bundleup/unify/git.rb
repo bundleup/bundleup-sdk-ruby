@@ -30,6 +30,21 @@ module BundleUp
         response.body
       end
 
+      # Fetches issues for a specific repository from the connected Git provider.
+      def issues(repo_name, params = {})
+        raise ArgumentError, 'repo_name is required to fetch issues.' if blank?(repo_name)
+
+        encoded_repo_name = URI.encode_www_form_component(repo_name)
+
+        response = connection.get("git/repos/#{encoded_repo_name}/issues") do |req|
+          req.params = params
+        end
+
+        raise "Failed to fetch git/repos/#{encoded_repo_name}/issues: #{response.status}" unless response.success?
+
+        response.body
+      end
+
       # Fetches tags for a specific repository from the connected Git provider.
       def tags(repo_name, params = {})
         raise ArgumentError, 'repo_name is required to fetch tags.' if blank?(repo_name)

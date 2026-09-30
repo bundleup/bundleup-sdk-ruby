@@ -125,6 +125,41 @@ RSpec.describe BundleUp::Unify::Git do
     end
   end
 
+  describe '#issues' do
+    it 'makes a GET request with encoded repo name' do
+      stub = stub_request(:get, "#{base_url}/git/repos/owner%2Frepo/issues")
+             .with(
+               headers: {
+                 'Authorization' => "Bearer #{api_key}",
+                 'Content-Type' => 'application/json',
+                 'BU-Connection-Id' => connection_id
+               }
+             )
+             .to_return(
+               status: 200,
+               body: '{"data":[{"id":1,"number":7,"title":"Crash on login"}]}',
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = instance.issues('owner/repo')
+      expect(result).to eq({ 'data' => [{ 'id' => 1, 'number' => 7, 'title' => 'Crash on login' }] })
+      expect(stub).to have_been_requested
+    end
+
+    it 'supports paging parameters' do
+      stub = stub_request(:get, "#{base_url}/git/repos/owner%2Frepo/issues?after=cursor_1&limit=5")
+             .to_return(status: 200, body: '{"data":[]}', headers: { 'Content-Type' => 'application/json' })
+
+      instance.issues('owner/repo', limit: 5, after: 'cursor_1')
+      expect(stub).to have_been_requested
+    end
+
+    it 'raises when repo_name is missing' do
+      expect { instance.issues('') }
+        .to raise_error(ArgumentError, 'repo_name is required to fetch issues.')
+    end
+  end
+
   describe '#branches' do
     it 'makes a GET request with encoded repo name' do
       stub = stub_request(:get, "#{base_url}/git/repos/owner%2Frepo/branches")

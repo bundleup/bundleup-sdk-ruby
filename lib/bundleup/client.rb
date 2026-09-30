@@ -11,6 +11,10 @@ module BundleUp
       @api_key = api_key
     end
 
+    def auth
+      @auth ||= BundleUp::Auth.new(@api_key)
+    end
+
     def connections
       @connections ||= BundleUp::Resources::Connection.new(@api_key)
     end
