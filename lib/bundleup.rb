@@ -23,7 +23,6 @@ require_relative 'bundleup/unify/ticketing'
 require_relative 'bundleup/unify/crm'
 require_relative 'bundleup/unify/drive'
 require_relative 'bundleup/unify/calendar'
-require_relative 'bundleup/unify/mcp'
 require_relative 'bundleup/unify/me'
 
 # Main module for the BundleUp SDK.

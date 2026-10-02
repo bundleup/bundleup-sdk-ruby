@@ -54,11 +54,6 @@ module BundleUp
       def me(params = {})
         (@me ||= BundleUp::Unify::Me.new(api_key, connection_id)).get(params)
       end
-
-      # Access the Unified MCP server for the connection.
-      def mcp
-        @mcp ||= BundleUp::Unify::MCP.new(api_key, connection_id)
-      end
     end
   end
 end
