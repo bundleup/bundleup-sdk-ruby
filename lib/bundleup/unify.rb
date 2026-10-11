@@ -7,7 +7,8 @@ module BundleUp
       attr_reader :api_key, :connection_id
 
       def initialize(api_key, connection_id)
-        @ticketing = BundleUp::Unify::Ticketing.new(api_key, connection_id)
+        @tasks = BundleUp::Unify::Tasks.new(api_key, connection_id)
+        @helpdesk = BundleUp::Unify::Helpdesk.new(api_key, connection_id)
         @chat = BundleUp::Unify::Chat.new(api_key, connection_id)
         @git = BundleUp::Unify::Git.new(api_key, connection_id)
         @crm = BundleUp::Unify::CRM.new(api_key, connection_id)
@@ -32,9 +33,14 @@ module BundleUp
         @crm ||= BundleUp::Unify::CRM.new(api_key, connection_id)
       end
 
-      # Access the Ticketing API for the connection.
-      def ticketing
-        @ticketing ||= BundleUp::Unify::Ticketing.new(api_key, connection_id)
+      # Access the Tasks API (issue trackers and project tools) for the connection.
+      def tasks
+        @tasks ||= BundleUp::Unify::Tasks.new(api_key, connection_id)
+      end
+
+      # Access the Helpdesk API (customer support tools) for the connection.
+      def helpdesk
+        @helpdesk ||= BundleUp::Unify::Helpdesk.new(api_key, connection_id)
       end
 
       # Access the Drive API for the connection.

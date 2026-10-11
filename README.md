@@ -84,7 +84,7 @@ Runnable examples are available in the [`examples/`](./examples) directory:
 
 - [`examples/basic_usage.rb`](./examples/basic_usage.rb) - Client setup, connections, integrations, and webhooks
 - [`examples/proxy_api.rb`](./examples/proxy_api.rb) - Proxy API GET request with a connection
-- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, PM, Ticketing, Drive, and Calendar endpoint usage
+- [`examples/unify_api.rb`](./examples/unify_api.rb) - Unify Chat, Git, Tasks, Helpdesk, Drive, and Calendar endpoint usage
 - [`examples/README.md`](./examples/README.md) - Setup and execution instructions
 
 ## Quick Start
@@ -540,6 +540,16 @@ url = client.auth.build_authorization_url(
 )
 
 # Redirect the user to `url`
+```
+
+The URL needs no API key, so you can also build it without a client:
+
+```ruby
+url = BundleUp.build_authorization_url(
+  client_id: 'your-client-id',
+  integration_id: 'github',
+  redirect_uri: 'https://app.example.com/callback'
+)
 ```
 
 **Parameters:**
@@ -1084,20 +1094,20 @@ provider's default branch is used.
 }
 ```
 
-#### Ticketing API
+#### Tasks API
 
-The Ticketing API provides a unified interface for ticketing and project management platforms like Jira, Linear, and Asana.
+The Tasks API provides a unified interface for issue trackers and project management tools like Jira, Linear, Asana, Trello, ClickUp, monday.com, Basecamp, Wrike, and Todoist.
 
-##### List Tickets
+##### List Tasks
 
 ```ruby
-result = unify.ticketing.tickets(
+result = unify.tasks.tasks(
   limit: 100,
   after: nil,
   include_raw: false
 )
 
-puts "Tickets: #{result['data']}"
+puts "Tasks: #{result['data']}"
 ```
 
 **Response:**
@@ -1124,18 +1134,18 @@ puts "Tickets: #{result['data']}"
 **Filtering and sorting:**
 
 ```ruby
-open_tickets = result['data'].select { |ticket| ticket['status'] == 'open' }
-sorted_by_date = result['data'].sort_by { |ticket| Time.parse(ticket['created_at']) }.reverse
+open_tasks = result['data'].select { |task| task['status'] == 'open' }
+sorted_by_date = result['data'].sort_by { |task| Time.parse(task['created_at']) }.reverse
 ```
 
-##### Get a Ticket
+##### Get a Task
 
-Fetch one ticket by ID. Not supported by Basecamp, whose API only serves a to-do underneath its project.
+Fetch one task by ID. Not supported by Basecamp, whose API only serves a to-do underneath its project.
 
 ```ruby
-result = unify.ticketing.ticket('PROJ-123')
+result = unify.tasks.task('PROJ-123')
 
-puts "Ticket: #{result['data']}"
+puts "Task: #{result['data']}"
 ```
 
 **Response:**
@@ -1159,7 +1169,7 @@ A single resource carries no pagination, so there is no `metadata` on this respo
 ##### List Projects
 
 ```ruby
-result = unify.ticketing.projects(
+result = unify.tasks.projects(
   limit: 100,
   after: nil,
   include_raw: false
@@ -1190,6 +1200,57 @@ puts "Projects: #{result['data']}"
 ```
 
 **Note:** Not every platform returns every field. Jira does not expose creation or update timestamps for projects, so `created_at` and `updated_at` are `nil` for Jira connections, and `status` is only set when Jira reports whether the project is archived.
+
+#### Helpdesk API
+
+The Helpdesk API provides a unified interface for customer support tools like Zendesk, ServiceNow, Zoho Desk, Gorgias, and Help Scout.
+
+##### List Tickets
+
+```ruby
+result = unify.helpdesk.tickets(
+  limit: 100,
+  after: nil,
+  include_raw: false
+)
+
+puts "Tickets: #{result['data']}"
+```
+
+**Response:**
+
+```ruby
+{
+  'data' => [
+    {
+      'id' => '4182',
+      'title' => 'Refund for order #1043',
+      'description' => 'Hi, my order arrived damaged...',
+      'status' => 'open',
+      'priority' => 'high',
+      'requester' => { 'id' => '381920', 'name' => 'Dana Ruiz', 'email' => 'dana@example.com' },
+      'url' => 'https://acme.zendesk.com/agent/tickets/4182',
+      'created_at' => '2024-01-15T10:30:00Z',
+      'updated_at' => '2024-01-20T14:22:00Z'
+    }
+  ],
+  'metadata' => {
+    'next' => 'cursor_def456'
+  }
+}
+```
+
+##### Get a Ticket
+
+Fetch one support ticket by ID. On ServiceNow the ID is the incident's `sys_id`.
+
+```ruby
+result = unify.helpdesk.ticket('4182')
+
+puts "Ticket: #{result['data']}"
+```
+
+A single resource carries no pagination, so there is no `metadata` on this response.
 
 #### CRM API
 
@@ -1552,7 +1613,8 @@ lib/
 │       ├── base.rb          # Base Unify class
 │       ├── chat.rb          # Chat Unify API
 │       ├── git.rb           # Git Unify API
-│       ├── ticketing.rb     # Ticketing Unify API
+│       ├── tasks.rb         # Tasks Unify API
+│       ├── helpdesk.rb      # Helpdesk Unify API
 │       ├── crm.rb           # CRM Unify API
 │       ├── drive.rb         # Drive Unify API
 │       └── calendar.rb      # Calendar Unify API

@@ -14,7 +14,10 @@ module BundleUp
     end
 
     # Builds the hosted authorization URL to send the end user to.
-    def build_authorization_url(client_id:, integration_id:, redirect_uri:, external_id: nil, state: nil)
+    #
+    # Needs no API key: /authorize only takes the public client and
+    # integration ids, so this is safe to call where the key must not live.
+    def self.build_authorization_url(client_id:, integration_id:, redirect_uri:, external_id: nil, state: nil)
       raise ArgumentError, 'client_id is required' if blank?(client_id)
       raise ArgumentError, 'integration_id is required' if blank?(integration_id)
       raise ArgumentError, 'redirect_uri is required' if blank?(redirect_uri)
@@ -28,6 +31,16 @@ module BundleUp
       params[:state] = state unless blank?(state)
 
       "#{BASE_URL}/authorize?#{URI.encode_www_form(params)}"
+    end
+
+    def self.blank?(value)
+      value.nil? || value.to_s.empty?
+    end
+    private_class_method :blank?
+
+    # Builds the hosted authorization URL to send the end user to.
+    def build_authorization_url(**params)
+      self.class.build_authorization_url(**params)
     end
 
     # Exchanges the one-time code from the redirect for the connection.

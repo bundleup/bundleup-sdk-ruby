@@ -1,4 +1,12 @@
 module BundleUp
+  def self.build_authorization_url: (
+    client_id: String,
+    integration_id: String,
+    redirect_uri: String,
+    ?external_id: String?,
+    ?state: String?
+  ) -> String
+
   class Auth
     BASE_URL: String
 
@@ -11,6 +19,16 @@ module BundleUp
     attr_reader api_key: String
 
     def initialize: (String api_key) -> void
+
+    def self.blank?: (untyped value) -> bool
+
+    def self.build_authorization_url: (
+      client_id: String,
+      integration_id: String,
+      redirect_uri: String,
+      ?external_id: String?,
+      ?state: String?
+    ) -> String
 
     def build_authorization_url: (
       client_id: String,

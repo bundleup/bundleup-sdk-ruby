@@ -8,7 +8,8 @@ module BundleUp
 
       def chat: () -> Chat
       def git: () -> Git
-      def ticketing: () -> Ticketing
+      def tasks: () -> Tasks
+      def helpdesk: () -> Helpdesk
       def crm: () -> CRM
       def drive: () -> Drive
       def calendar: () -> Calendar

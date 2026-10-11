@@ -49,6 +49,36 @@ RSpec.describe BundleUp::Auth do
     end
   end
 
+  describe '.build_authorization_url' do
+    let(:required) { { client_id: 'client_123', integration_id: 'github', redirect_uri: redirect_uri } }
+
+    it 'builds the authorize URL without an API key' do
+      url = described_class.build_authorization_url(**required, external_id: 'user_42', state: 'xyz')
+      query = URI.decode_www_form(URI.parse(url).query).to_h
+
+      expect(query).to eq(
+        'client_id' => 'client_123',
+        'integration_id' => 'github',
+        'redirect_uri' => redirect_uri,
+        'external_id' => 'user_42',
+        'state' => 'xyz'
+      )
+    end
+
+    it 'is also exposed on the BundleUp module' do
+      expect(BundleUp.build_authorization_url(**required)).to eq(described_class.build_authorization_url(**required))
+    end
+
+    it 'matches the instance method' do
+      expect(instance.build_authorization_url(**required)).to eq(described_class.build_authorization_url(**required))
+    end
+
+    it 'raises when a required param is missing' do
+      expect { BundleUp.build_authorization_url(**required, client_id: '') }
+        .to raise_error(ArgumentError, 'client_id is required')
+    end
+  end
+
   describe '#get_connection_from_code' do
     it 'POSTs the code and redirect_uri with the API key' do
       stub = stub_request(:post, exchange_url)

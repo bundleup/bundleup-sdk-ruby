@@ -11,7 +11,6 @@ abort 'BUNDLEUP_API_KEY is required' if api_key.nil? || api_key.empty?
 
 abort 'BUNDLEUP_CONNECTION_ID is required for unify example' if connection_id.nil? || connection_id.empty?
 
-ticketing = BundleUp::Unify::Ticketing.new(api_key, connection_id)
 client = BundleUp::Client.new(api_key)
 unify = client.unify(connection_id)
 
@@ -46,17 +45,24 @@ rescue StandardError => e
 end
 
 begin
-  tickets = ticketing.tickets(limit: 10)
-  puts "Ticketing tickets: #{tickets['data']&.length || 0}"
+  tasks = unify.tasks.tasks(limit: 10)
+  puts "Tasks: #{tasks['data']&.length || 0}"
 
-  first = tickets['data']&.first
+  first = tasks['data']&.first
 
   if first
-    ticket = ticketing.ticket(first['id'])
-    puts "Ticket #{ticket['data']['id']}: #{ticket['data']['title']}"
+    task = unify.tasks.task(first['id'])
+    puts "Task #{task['data']['id']}: #{task['data']['title']}"
   end
 rescue StandardError => e
-  warn "Failed to fetch tickets: #{e.message}"
+  warn "Failed to fetch tasks: #{e.message}"
+end
+
+begin
+  tickets = unify.helpdesk.tickets(limit: 10)
+  puts "Helpdesk tickets: #{tickets['data']&.length || 0}"
+rescue StandardError => e
+  warn "Failed to fetch helpdesk tickets: #{e.message}"
 end
 
 begin

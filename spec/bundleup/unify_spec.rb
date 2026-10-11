@@ -12,8 +12,9 @@ RSpec.describe BundleUp::Unify::Client do
       expect(client).to be_a(described_class)
     end
 
-    it 'exposes ticketing, chat, git, crm, and drive instances' do # rubocop:disable RSpec/MultipleExpectations
-      expect(client.ticketing).to be_a(BundleUp::Unify::Ticketing)
+    it 'exposes tasks, helpdesk, chat, git, crm, and drive instances' do # rubocop:disable RSpec/MultipleExpectations
+      expect(client.tasks).to be_a(BundleUp::Unify::Tasks)
+      expect(client.helpdesk).to be_a(BundleUp::Unify::Helpdesk)
       expect(client.chat).to be_a(BundleUp::Unify::Chat)
       expect(client.git).to be_a(BundleUp::Unify::Git)
       expect(client.crm).to be_a(BundleUp::Unify::CRM)
@@ -23,7 +24,8 @@ RSpec.describe BundleUp::Unify::Client do
     it 'memoizes each accessor' do # rubocop:disable RSpec/MultipleExpectations
       expect(client.chat).to be(client.chat)
       expect(client.git).to be(client.git)
-      expect(client.ticketing).to be(client.ticketing)
+      expect(client.tasks).to be(client.tasks)
+      expect(client.helpdesk).to be(client.helpdesk)
       expect(client.crm).to be(client.crm)
       expect(client.drive).to be(client.drive)
     end

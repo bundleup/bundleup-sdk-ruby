@@ -19,7 +19,8 @@ require_relative 'bundleup/resources/webhook'
 require_relative 'bundleup/unify/base'
 require_relative 'bundleup/unify/chat'
 require_relative 'bundleup/unify/git'
-require_relative 'bundleup/unify/ticketing'
+require_relative 'bundleup/unify/tasks'
+require_relative 'bundleup/unify/helpdesk'
 require_relative 'bundleup/unify/crm'
 require_relative 'bundleup/unify/drive'
 require_relative 'bundleup/unify/calendar'
@@ -27,4 +28,9 @@ require_relative 'bundleup/unify/me'
 
 # Main module for the BundleUp SDK.
 module BundleUp
+  # Builds the hosted authorization URL without an API key.
+  # See BundleUp::Auth.build_authorization_url.
+  def self.build_authorization_url(**params)
+    Auth.build_authorization_url(**params)
+  end
 end
